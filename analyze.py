@@ -118,9 +118,9 @@ class SuperResolutionAnalyzer:
         }
 
 
-    def show_image(self, image_type: ImageType | str, domain: str = "time") -> None:
+    def show_image(self, image_type: ImageType | str, domain: str = "spatial") -> None:
         """Show the image on the screen."""
-        if domain == "time":
+        if domain == "spatial":
             images_dict = self._images
         elif domain == "frequency":
             images_dict = self._fourier_amplitudes
@@ -141,38 +141,51 @@ class SuperResolutionAnalyzer:
             fig, axs = plt.subplots(2, 3)
             fig.suptitle("Image Comparison - Scale: " + str(self._scale))
             # Show the original image.
+            # Check if the image fits [0, 255] or [0, 1] range.
             rgb_image = cv2.cvtColor(images_dict[ImageType.ORIGINAL_IMAGE],
                                      cv2.COLOR_BGR2RGB)
+            if rgb_image.max() <= 1.0:
+                rgb_image = (rgb_image * 255).astype(numpy.uint8)
             axs[0, 0].imshow(rgb_image)
             axs[0, 0].set_title("Original image")
             axs[0, 0].axis("off")
             # Show the small image.
             rgb_image = cv2.cvtColor(images_dict[ImageType.SMALL_IMAGE],
                                      cv2.COLOR_BGR2RGB)
+            if rgb_image.max() <= 1.0:
+                rgb_image = (rgb_image * 255).astype(numpy.uint8)
             axs[0, 1].imshow(rgb_image)
             axs[0, 1].set_title("Small image")
             axs[0, 1].axis("off")
             # Show the zero-order interpolation image.
             rgb_image = cv2.cvtColor(images_dict[ImageType.ZERO_ORDER_INTERPOLATION],
                                     cv2.COLOR_BGR2RGB)
+            if rgb_image.max() <= 1.0:
+                rgb_image = (rgb_image * 255).astype(numpy.uint8)
             axs[0, 2].imshow(rgb_image)
             axs[0, 2].set_title("Zero-order interpolation")
             axs[0, 2].axis("off")
             # Show the linear interpolation image.
             rgb_image = cv2.cvtColor(images_dict[ImageType.LINEAR_INTERPOLATION],
                                      cv2.COLOR_BGR2RGB)
+            if rgb_image.max() <= 1.0:
+                rgb_image = (rgb_image * 255).astype(numpy.uint8)
             axs[1, 0].imshow(rgb_image)
             axs[1, 0].set_title("Linear interpolation")
             axs[1, 0].axis("off")
             # Show the bicubic interpolation image.
             rgb_image = cv2.cvtColor(images_dict[ImageType.BICUBIC_INTERPOLATION],
                                      cv2.COLOR_BGR2RGB)
+            if rgb_image.max() <= 1.0:
+                rgb_image = (rgb_image * 255).astype(numpy.uint8)
             axs[1, 1].imshow(rgb_image)
             axs[1, 1].set_title("Bicubic interpolation")
             axs[1, 1].axis("off")
             # Show the super-resolution image.
             rgb_image = cv2.cvtColor(images_dict[ImageType.SUPER_RESOLUTION],
                                      cv2.COLOR_BGR2RGB)
+            if rgb_image.max() <= 1.0:
+                rgb_image = (rgb_image * 255).astype(numpy.uint8)
             axs[1, 2].imshow(rgb_image)
             axs[1, 2].set_title("Super-resolution")
             axs[1, 2].axis("off")
@@ -200,25 +213,55 @@ class SuperResolutionAnalyzer:
         # Calculate the Fourier amplitudes for each image.
         for name, image in self._images.items():
             grayscale_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-            # Calculate the DFT of the images.
-            fourier_image= cv2.dft(numpy.float32(grayscale_image), flags=cv2.DFT_COMPLEX_OUTPUT)
-
-            # Shift the zero-frequency component to the center of the spectrum.
-            fourier_shifted = numpy.fft.fftshift(fourier_image)
-
-            # Calculate the magnitude of the Fourier Transform.
-            print(cv2.magnitude(fourier_shifted[:,:,0], fourier_shifted[:,:,1]))
-            fourier_magnitude = 20 * numpy.log(
-                cv2.magnitude(fourier_shifted[:,:,0], fourier_shifted[:,:,1])
+            image_rows, image_cols = grayscale_image.shape
+            m_rows = cv2.getOptimalDFTSize(image_rows)
+            n_cols = cv2.getOptimalDFTSize(image_cols)
+            padded_image = cv2.copyMakeBorder(
+                src=grayscale_image,
+                top=0,
+                bottom=m_rows - image_rows,
+                left=0,
+                right=n_cols - image_cols,
+                borderType=cv2.BORDER_CONSTANT,
+                value=[0, 0, 0]
             )
 
-            # Scale the magnitude for display
-            fourier_normalized = cv2.normalize(fourier_magnitude, None, 0, 255,
-                                               cv2.NORM_MINMAX, cv2.CV_8UC1)
-
+            planes = [numpy.float32(padded_image), numpy.zeros(padded_image.shape, numpy.float32)]
+            complex_image = cv2.merge(planes)
+            cv2.dft(complex_image, complex_image)
+            # planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
+            cv2.split(complex_image, planes)
+            # planes[0] = magnitude
+            cv2.magnitude(planes[0], planes[1], planes[0])
+            magnitude_image = planes[0]
+            # Switch to logarithmic scale
+            mat_of_ones = numpy.ones(magnitude_image.shape, dtype=magnitude_image.dtype)
+            cv2.add(mat_of_ones, magnitude_image, magnitude_image)
+            cv2.log(magnitude_image, magnitude_image)
+            # Crop the spectrum
+            magnitude_image_rows, magnitude_image_cols = magnitude_image.shape
+            # crop the spectrum, if it has an odd number of rows or columns
+            magnitude_image = magnitude_image[0:(magnitude_image_rows & -2),
+                                              0:(magnitude_image_cols & -2)]
+            cx = int(magnitude_image_rows/2)
+            cy = int(magnitude_image_cols/2)
+            q0 = magnitude_image[0:cx, 0:cy]         # Top-Left - Create a ROI per quadrant
+            q1 = magnitude_image[cx:cx+cx, 0:cy]     # Top-Right
+            q2 = magnitude_image[0:cx, cy:cy+cy]     # Bottom-Left
+            q3 = magnitude_image[cx:cx+cx, cy:cy+cy] # Bottom-Right
+            # swap quadrants (Top-Left with Bottom-Right)
+            tmp = numpy.copy(q0)
+            magnitude_image[0:cx, 0:cy] = q3
+            magnitude_image[cx:cx + cx, cy:cy + cy] = tmp
+            # swap quadrant (Top-Right with Bottom-Left)
+            tmp = numpy.copy(q1)
+            magnitude_image[cx:cx + cx, 0:cy] = q2
+            magnitude_image[0:cx, cy:cy + cy] = tmp
+            # Normalize the magnitude image for the display
+            cv2.normalize(magnitude_image, magnitude_image, 0, 1, cv2.NORM_MINMAX)
             # Store the Fourier amplitude.
-            self._fourier_amplitudes[name] = fourier_normalized
+            print("Fourier amplitude for", name, "is")
+            self._fourier_amplitudes[name] = magnitude_image
 
     def _get_super_resolution_image(self) -> numpy.ndarray:
         """It creates a new function from the original image with scale factor."""
