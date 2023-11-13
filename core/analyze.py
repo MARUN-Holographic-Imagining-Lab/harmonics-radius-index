@@ -13,6 +13,9 @@ images' algorithms. It uses following steps:
 10. Draw a circle from the amplitude magnitude equals to 10^-5.
 11. Return the radius of the circle.
 '''
+import cv2
+from matplotlib import pyplot as plt
+
 from core.image_preperation_factory import ImagePreperationFactory
 from core.image_holder import ImagePossibleTypes
 from core.transform_strategies.fourier_transform import FourierTransformStrategy
@@ -42,3 +45,15 @@ class SuperResolutionAnalyzer:
         # If all the images are asked.
         elif isinstance(image_type, str) and image_type == "all":
             self._image_holder.show_images(transform_strategy)
+
+    def remove_components_below(self, image_type: ImagePossibleTypes, threshold: float) -> None:
+        """
+        Removes the components below the threshold.
+        """
+        fourier_magnitudes = self._image_holder.get_image(image_type).apply_transform(FourierTransformStrategy())
+        print(f"Max: {fourier_magnitudes.max()}, Min: {fourier_magnitudes.min()}, Mean: {fourier_magnitudes.mean()}")
+        fourier_magnitudes[fourier_magnitudes < threshold] = 0
+
+        # Show the image.
+        cv2.normalize(fourier_magnitudes, fourier_magnitudes, 0, 255, cv2.NORM_MINMAX)
+        plt.imsave(f"{image_type.name}_DFT_above_{threshold}.png", fourier_magnitudes, cmap="gray")

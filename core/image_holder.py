@@ -78,16 +78,15 @@ class ImageHolder:
 
         id_generator = IdGenerator(2, 3)
         for image_type in ImagePossibleTypes:
-            # Check if the image fits [0, 255] or [0, 1] range.
             if transform_strategy is None:
                 image_show = cv2.cvtColor(self._images[image_type].get_image(), cv2.COLOR_BGR2RGB)
             else:
                 image_show = transform_strategy.apply_transform(
                     self._images[image_type].get_image()
                 )
-
-            if image_show.max() <= 1.0:
-                image_show = (image_show * 255).astype(numpy.uint8)
+                # Normalize the magnitude image for the display
+                cv2.normalize(image_show, image_show, 0, 255, cv2.NORM_MINMAX)
+                image_show = image_show.astype(numpy.uint8)
 
             row_id, col_id = id_generator.get_id()
             axis[row_id, col_id].imshow(image_show)

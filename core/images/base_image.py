@@ -3,6 +3,7 @@ The base class for representing an image.
 """
 
 from abc import ABCMeta, abstractstaticmethod
+import cv2
 import numpy
 import matplotlib.pyplot as plt
 
@@ -69,6 +70,8 @@ class BaseImage(metaclass=ABCMeta):
         Show the transformed image.
         """
         transformed_image = self.apply_transform(transform_strategy)
+        cv2.normalize(transformed_image, transformed_image, 0, 255, cv2.NORM_MINMAX)
+        transformed_image = transformed_image.astype(numpy.uint8)
         plt.imshow(transformed_image)
         plt.title(title)
         plt.show()
