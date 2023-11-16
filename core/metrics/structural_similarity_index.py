@@ -2,13 +2,12 @@
 MSE implementation as a metric.
 """
 import numpy
-from skimage.metrics import mean_squared_error
-
+from skimage.metrics import structural_similarity
 from core.image import Image
 from core.metrics.interface_metric import InterfaceMetric, MetricResult
 
 
-class MeanSquaredError(InterfaceMetric):
+class StructuralSimilarityIndex(InterfaceMetric):
     """The MSE metric."""
 
     @property
@@ -17,7 +16,7 @@ class MeanSquaredError(InterfaceMetric):
         return {"y_true": Image, "y_pred": Image}
 
     def calculate(self, **kwargs) -> MetricResult:
-        """Calculate the MSE metric."""
+        """Calculate the SSIM metric."""
         # Check keywords.
         if not set(self.keywords_needed).issubset(kwargs):
             raise ValueError("Missing keywords needed to calculate the metric.")
@@ -36,9 +35,16 @@ class MeanSquaredError(InterfaceMetric):
         if y_true.get_shape() != y_pred.get_shape():
             raise ValueError("y_true and y_pred must have the same shape.")
 
-        # Calculate the MSE.
+        # Calculate the SSIM.
         y_true_array: numpy.ndarray = y_true.get_image()
         y_pred_array: numpy.ndarray = y_pred.get_image()
-        calculated_mse = mean_squared_error(y_true_array, y_pred_array)
 
-        return MetricResult(metric_name="mse", metric_value=calculated_mse, metric_unit="px^2")
+        calculated_ssim = structural_similarity(
+            y_true_array,
+            y_pred_array,
+            data_range=y_true_array.max() - y_true_array.min(),
+            multichannel=True,
+            channel_axis=2,
+        )
+
+        return MetricResult(metric_name="SSIM", metric_value=calculated_ssim, metric_unit="")

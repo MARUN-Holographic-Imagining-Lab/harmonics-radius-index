@@ -1,9 +1,8 @@
 """
-MSE implementation as a metric.
+Harmonics Radius implementation with SSIM as a metric.
 """
 import numpy
-import cv2
-from matplotlib import pyplot as plt
+from skimage.metrics import structural_similarity
 
 from core.image import Image
 from core.metrics.interface_metric import InterfaceMetric, MetricResult
@@ -11,7 +10,7 @@ from core.utils import get_fft_of_image, draw_square_from_center
 
 
 class HarmonicsRadius(InterfaceMetric):
-    """The Harmonics Radius' metric."""
+    """The Harmonics Radius with SSIM metric."""
 
     @property
     def keywords_needed(self) -> dict[str, type]:
@@ -42,27 +41,31 @@ class HarmonicsRadius(InterfaceMetric):
         fft_of_true: numpy.ndarray = get_fft_of_image(y_true.get_image(), scale_log=True)
         fft_of_pred: numpy.ndarray = get_fft_of_image(y_pred.get_image(), scale_log=True)
 
-        # Find the peak of the FFT.
-        peak_mag_true = numpy.max(fft_of_true)
-
-        # Start from a 3x3 grid in the center point of the fft_of_pred.
-        # Check the average magnitude of the 3x3 grid.
-        # If it is greater than the 75% of the peak_mag_true, then return the radius.
-        # Else, increase the grid size by 2 and repeat.
+        # Find the center point.
         pred_x_center = fft_of_pred.shape[0] // 2
         pred_y_center = fft_of_pred.shape[1] // 2
 
         grid_size = fft_of_pred.shape[0] // 2
         while True:
             # Get the grid.
-            grid = fft_of_pred[
+            grid_pred = fft_of_pred[
+                pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
+                pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
+            ]
+            grid_true = fft_of_true[
                 pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
                 pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
             ]
 
-            # Check the average magnitude of the grid.
-            avg_mag = numpy.average(grid)
-            if avg_mag > 0.60 * peak_mag_true:
+            # Check the SSIM of the grid.
+            ssim_result = structural_similarity(
+                grid_true,
+                grid_pred,
+                data_range=fft_of_true.max() - fft_of_true.min(),
+                multichannel=False,
+            )
+
+            if ssim_result > 0.85:
                 # The radius is the half of the grid size.
                 radius = grid_size // 2
 

@@ -2,11 +2,22 @@
 Main application script
 """
 
-from core.metrics import MeanSquaredError, HarmonicsRadius
+from core.metrics import (
+    MeanSquaredError,
+    HarmonicsRadius,
+    StructuralSimilarityIndex,
+    PeakSignalToNoiseRatio
+)
+
 from core.settings import SRAnalyzerSettings
 from core.image import Image
 from core.sr_analyzer import SRAnalyzer
-from core.preprocessors import shrink_to, linear_upscale, bicubic_upscale, nearest_upscale
+from core.preprocessors import (
+    shrink_to,
+    linear_upscale,
+    bicubic_upscale,
+    nearest_upscale,
+)
 
 
 if __name__ == "__main__":
@@ -27,9 +38,13 @@ if __name__ == "__main__":
     # Create the analyzer.
     analyzer = SRAnalyzer(SRAnalyzerSettings(name="MSE_HR_Calculator"))
 
-    # Add metrics and images.
+    # Add metrics.
     analyzer.add_metric(MeanSquaredError())
     analyzer.add_metric(HarmonicsRadius())
+    analyzer.add_metric(StructuralSimilarityIndex())
+    analyzer.add_metric(PeakSignalToNoiseRatio())
+
+    # Add images.
     analyzer.add_reference_image(high_resolution_image)
     analyzer.add_image(zero_order_image)
     analyzer.add_image(linear_image)

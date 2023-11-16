@@ -1,15 +1,15 @@
 """
-MSE implementation as a metric.
+PSNR implementation as a metric.
 """
 import numpy
-from skimage.metrics import mean_squared_error
+from skimage.metrics import peak_signal_noise_ratio
 
 from core.image import Image
 from core.metrics.interface_metric import InterfaceMetric, MetricResult
 
 
-class MeanSquaredError(InterfaceMetric):
-    """The MSE metric."""
+class PeakSignalToNoiseRatio(InterfaceMetric):
+    """The PSNR metric."""
 
     @property
     def keywords_needed(self) -> dict[str, type]:
@@ -39,6 +39,10 @@ class MeanSquaredError(InterfaceMetric):
         # Calculate the MSE.
         y_true_array: numpy.ndarray = y_true.get_image()
         y_pred_array: numpy.ndarray = y_pred.get_image()
-        calculated_mse = mean_squared_error(y_true_array, y_pred_array)
+        calculated_psnr = peak_signal_noise_ratio(
+            y_true_array,
+            y_pred_array,
+            data_range=y_true_array.max() - y_true_array.min(),
+        )
 
-        return MetricResult(metric_name="mse", metric_value=calculated_mse, metric_unit="px^2")
+        return MetricResult(metric_name="PSNR", metric_value=calculated_psnr, metric_unit="dB")
