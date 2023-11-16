@@ -52,6 +52,4 @@ def draw_square_from_center(image: numpy.ndarray, center: tuple[int, int], half_
 
     # Draw the rectangle.
     cv2.rectangle(resulted_image_rgb, (x_start, y_start), (x_end, y_end), color, 2)  # pylint: disable=no-member
-    # Now draw a circle in the center with radius half_size.
-    cv2.circle(resulted_image_rgb, center, half_size, color, 2)  # pylint: disable=no-member
     show_image(resulted_image_rgb)
