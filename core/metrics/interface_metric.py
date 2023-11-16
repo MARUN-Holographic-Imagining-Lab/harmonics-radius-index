@@ -19,7 +19,7 @@ class MetricResult:
     def __str__(self) -> str:
         """Return the string representation of the metric."""
         return f"{self.name}: {self.value} {self.unit} " \
-               f"(ref: {self.reference_image_name}, img: {self.image_name})"
+               f"(ref: {self.reference_image_name}, comp: {self.image_name})"
 
     def to_dict(self) -> dict[str, Any]:
         """Return the dictionary representation of the metric."""
