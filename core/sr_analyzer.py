@@ -30,7 +30,7 @@ class SRAnalyzer:
         """Add an image to the analyzer."""
         self._images.append(image)
 
-    def calculate(self) -> None:
+    def calculate(self) -> list[dict[str, Any]]:
         """Calculate the metrics."""
         # Check if the analyzer is done.
         if self._is_done:

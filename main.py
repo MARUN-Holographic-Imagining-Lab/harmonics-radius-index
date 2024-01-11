@@ -22,25 +22,35 @@ from core.preprocessors import (
 
 if __name__ == "__main__":
     # Add images.
-    HR_IMAGE_PATH = "test_images/gokhan_hr.png"
-    SR_IMAGE_PATH = "test_images/gokhan_sr.png"
-    high_resolution_image   = Image(HR_IMAGE_PATH, name="high_resolution")
-    low_resolution_image    = Image(HR_IMAGE_PATH, name="low_resolution",
-                                    preprocess=lambda img: shrink_to(img, 64, 64))
+    TRUE_IMAGE_PATH = "datasets/Set5/image_SRF_2/img_001_SRF_2_HR.png"
+    ESRGAN_RESULT = "datasets/results_hat_realesrgan/Real-ESRGAN/img_001_out.png"
+    HAT_RESULT = "datasets/results_hat_realesrgan/HAT/img_001_HAT_SRx2_ImageNet-pretrain.png"
+
+    high_resolution_image   = Image(TRUE_IMAGE_PATH, name="high_resolution")
+    shapes = high_resolution_image.get_shape()
+
+    low_resolution_image    = Image(TRUE_IMAGE_PATH, name="low_resolution",
+                                    preprocess=lambda img: shrink_to(img,
+                                                                     shapes[1] // 2,
+                                                                     shapes[0] // 2))
     zero_order_image        = Image(low_resolution_image, name="zero_order_upscaled",
-                                    preprocess=lambda img: nearest_upscale(img, 8))
+                                    preprocess=lambda img: nearest_upscale(img, 2))
     linear_image            = Image(low_resolution_image, name="linear_upscaled",
-                                    preprocess=lambda img: linear_upscale(img, 8))
+                                    preprocess=lambda img: linear_upscale(img, 2))
     bicubic_image           = Image(low_resolution_image, name="bicubic_upscaled",
-                                    preprocess=lambda img: bicubic_upscale(img, 8))
-    super_image             = Image(SR_IMAGE_PATH, name="super_upscaled")
+                                    preprocess=lambda img: bicubic_upscale(img, 2))
+    hat                     = Image(HAT_RESULT, name="hat")
+    esrgan                  = Image(ESRGAN_RESULT, name="esrgan")
+    high_res                = Image(TRUE_IMAGE_PATH, name="high_res")
 
     # Create the analyzer.
-    analyzer = SRAnalyzer(SRAnalyzerSettings(name="MSE_HR_Calculator"))
+    analyzer = SRAnalyzer(
+        SRAnalyzerSettings(name="SuperResolution Example")
+    )
 
     # Add metrics.
-    analyzer.add_metric(MeanSquaredError())
     analyzer.add_metric(HarmonicsRadius())
+    analyzer.add_metric(MeanSquaredError())
     analyzer.add_metric(StructuralSimilarityIndex())
     analyzer.add_metric(PeakSignalToNoiseRatio())
 
@@ -49,7 +59,9 @@ if __name__ == "__main__":
     analyzer.add_image(zero_order_image)
     analyzer.add_image(linear_image)
     analyzer.add_image(bicubic_image)
-    analyzer.add_image(super_image)
+    analyzer.add_image(hat)
+    analyzer.add_image(esrgan)
+    analyzer.add_image(high_res)
 
     # Calculate the metrics.
     results = analyzer.calculate()

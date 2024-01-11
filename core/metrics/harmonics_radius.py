@@ -6,7 +6,7 @@ from skimage.metrics import structural_similarity
 
 from core.image import Image
 from core.metrics.interface_metric import InterfaceMetric, MetricResult
-from core.utils import get_fft_of_image, draw_square_from_center
+from core.utils import get_fft_of_image, draw_square_from_center, show_fft_image
 
 
 class HarmonicsRadius(InterfaceMetric):
@@ -65,7 +65,7 @@ class HarmonicsRadius(InterfaceMetric):
                 multichannel=False,
             )
 
-            if ssim_result > 0.85:
+            if ssim_result > 0.95:
                 # The radius is the half of the grid size.
                 radius = grid_size // 2
 
@@ -80,12 +80,12 @@ class HarmonicsRadius(InterfaceMetric):
             grid_size -= 2
 
             # A stop condition.
-            if grid_size < 5:
+            if grid_size < 7:
                 break
 
         # If the radius is not found, return the maximum radius.
         return MetricResult(
             metric_name="harmonics_radius",
-            metric_value=fft_of_pred.shape[0] // 2,
+            metric_value=0,
             metric_unit="px"
         )

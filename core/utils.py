@@ -17,6 +17,11 @@ def show_image(image: numpy.ndarray, title: str = "Image") -> None:
     cv2.destroyAllWindows()
 
 
+def save_image(image: numpy.ndarray, image_path: str) -> None:
+    """Save the image to the path."""
+    cv2.imwrite(image_path, image)
+
+
 def get_fft_of_image(image: numpy.ndarray, scale_log: bool = True) -> numpy.ndarray:
     """Get the FFT of the image."""
     grey_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=no-member
@@ -51,5 +56,5 @@ def draw_square_from_center(image: numpy.ndarray, center: tuple[int, int], half_
     resulted_image_rgb = cv2.cvtColor(resulted_image, cv2.COLOR_GRAY2BGR)  # pylint: disable=no-member
 
     # Draw the rectangle.
-    cv2.rectangle(resulted_image_rgb, (x_start, y_start), (x_end, y_end), color, 2)  # pylint: disable=no-member
+    cv2.rectangle(resulted_image_rgb, (y_start, x_start), (y_end, x_end), color, 2)  # pylint: disable=no-member
     show_image(resulted_image_rgb)

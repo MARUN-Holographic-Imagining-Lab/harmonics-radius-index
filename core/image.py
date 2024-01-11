@@ -2,7 +2,7 @@
 Holds the Image class to be used in the analisys.
 """
 from numpy import ndarray
-from core.utils import read_image
+from core.utils import read_image, save_image
 
 class Image:
     """Holds the image objects and preproceses if needed."""
@@ -41,3 +41,9 @@ class Image:
         Return the name of the image.
         """
         return self._name
+
+    def save_image(self, path: str) -> None:
+        """
+        Save the image to the path.
+        """
+        save_image(self._image, path)
