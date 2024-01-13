@@ -1,5 +1,6 @@
 """
-Main application script
+This script compares the results of the HAT algorithm with the linear
+interpolation algorithm when the HAT result is mirrored.
 """
 from core.image import Image
 from core.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
@@ -45,4 +46,3 @@ if __name__ == "__main__":
     results = analyzer.calculate()
     for result in results:
         print(result)
-

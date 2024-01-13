@@ -1,3 +1,7 @@
+"""
+This is the standalone version of the harmonic radius index.
+"""
+
 import numpy
 from skimage.metrics import structural_similarity
 

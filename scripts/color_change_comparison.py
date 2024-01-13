@@ -1,5 +1,6 @@
 """
-Main application script
+This script shows how to use the SRAnalyzer class to compare the results of
+different super resolution algorithms with high-resolution one color changed.
 """
 from core.image import Image
 from core.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
@@ -20,16 +21,17 @@ if __name__ == "__main__":
     IMAGE_NO = 5
 
     # Get file paths.
-    IMAGE_HAT = f"datasets/hat_results/img_00{IMAGE_NO}_out.png"
-    IMAGE_LINEAR = f"datasets/linear_results/image_{IMAGE_NO}_x2.png"
+    ORIGINAL_IMAGE = "original_image.png"
+    IMAGE_HAT = "hat_image.png"
+    IMAGE_LINEAR = "linear_image.png"
 
     # Read images.
-    original    = Image(f"datasets/Set5/image_SRF_2/img_00{IMAGE_NO}_SRF_2_HR.png", name="original")
+    original    = Image(ORIGINAL_IMAGE, name="original")
     hat         = Image(IMAGE_HAT, name="hat", preprocess=circler_colours)
     linear      = Image(IMAGE_LINEAR, name="linear")
 
     # Save the image.
-    hat.save_image(f"datasets/hat_results/image_{IMAGE_NO}_x2-color_change.png")
+    hat.save_image("save_here.png")
 
     # Create the analyzer.
     analyzer = SRAnalyzer(
@@ -49,4 +51,3 @@ if __name__ == "__main__":
     results = analyzer.calculate()
     for result in results:
         print(result)
-

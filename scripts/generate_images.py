@@ -12,7 +12,7 @@ from core.utils import save_image
 
 if __name__ == "__main__":
     # Add images.
-    HR_IMAGE_PATH = "datasets/lenna.png"
+    HR_IMAGE_PATH = "high_res_image.png"
 
     high_resolution_image   = Image(HR_IMAGE_PATH, name="high_resolution")
     low_resolution_image    = Image(HR_IMAGE_PATH, name="low_resolution",

@@ -1,7 +1,8 @@
-"""This file is used to show the drawback of SSIM."""
+"""
+This script is used to show the drawback of SSIM.
+"""
 
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2
 from skimage.metrics import structural_similarity
 

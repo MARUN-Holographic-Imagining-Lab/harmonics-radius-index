@@ -1,5 +1,6 @@
 """
-Main application script
+This script compares the results of linear and bicubic interpolation
+with the high resolution image.
 """
 
 from core.metrics import (
@@ -13,7 +14,6 @@ from core.settings import SRAnalyzerSettings
 from core.image import Image
 from core.sr_analyzer import SRAnalyzer
 from core.preprocessors import (
-    shrink_to,
     linear_upscale,
     bicubic_upscale,
     nearest_upscale,
@@ -21,14 +21,10 @@ from core.preprocessors import (
 
 
 if __name__ == "__main__":
-    # Add images.
-    IMAGE_NUMBER = 5
-    SCALE_FACTOR = 2
-
-    TRUE_IMAGE_PATH = f"datasets/Set5/image_SRF_{SCALE_FACTOR}/img_00{IMAGE_NUMBER}_SRF_{SCALE_FACTOR}_HR.png"
-    LOW_PATH = f"datasets/Set5/image_SRF_{SCALE_FACTOR}/img_00{IMAGE_NUMBER}_SRF_{SCALE_FACTOR}_LR.png"
-    REAL_ESRGAN_PATH = f"datasets/model_results/Real-ESRGAN/img_00{IMAGE_NUMBER}_out.png"
-    HAT_PATH = f"datasets/model_results/HAT/img_00{IMAGE_NUMBER}_out.png"
+    TRUE_IMAGE_PATH = "true_image.png"
+    LOW_PATH = "low_image.png"
+    REAL_ESRGAN_PATH = "esrgan_image.png"
+    HAT_PATH = "hat_image.png"
 
     high_resolution_image   = Image(TRUE_IMAGE_PATH, name="high_resolution")
     low_resolution_image    = Image(LOW_PATH, name="low_resolution")
@@ -58,6 +54,5 @@ if __name__ == "__main__":
 
     # Calculate the metrics.
     results = analyzer.calculate()
-    print("Results:")
     for result in results:
         print(result)

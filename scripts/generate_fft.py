@@ -3,16 +3,13 @@ This script generates the FFT of an image
 and plots the spatial domain image, FFT
 magnitudes and FFT phases in log domain.
 """
-
-import argparse
-
 import cv2
 import numpy
 from matplotlib import pyplot as plt
 
 
 if __name__ == "__main__":
-    IMAGE_PATH = "datasets/lenna.png"
+    IMAGE_PATH = "image.png"
 
     # Read the image.
     image = cv2.imread(IMAGE_PATH, cv2.IMREAD_GRAYSCALE)  # pylint: disable=no-member
@@ -57,4 +54,8 @@ if __name__ == "__main__":
 
     # Save the plot.
     plt.tight_layout()
-    plt.savefig("outputs/fft_pha.png", transparent=True, dpi=300, bbox_inches="tight", pad_inches=0.0)
+    plt.savefig("save_here.png",
+                transparent=True,
+                dpi=300,
+                bbox_inches="tight",
+                pad_inches=0.0)
