@@ -45,8 +45,9 @@ def get_fft_of_image(image: ndarray, scale_log: bool = True) -> ndarray:
     :param scale_log: If the FFT should be scaled logarithmically.
     :return: The FFT of the image.
     """
-    grey_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=no-member
-    fft_image = fft.fftshift(fft.fft2(grey_image))
+    if len(image.shape) == 3:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=no-member
+    fft_image = fft.fftshift(fft.fft2(image))
 
     if scale_log:
         fft_image = np_log(1 + np_abs(fft_image))
