@@ -1,8 +1,7 @@
 """
 The main super resolution analyzer class.
 """
-from typing import Any
-from core.metrics.interface_metric import InterfaceMetric
+from core.metrics.interface_metric import InterfaceMetric, MetricResult
 from core.image import Image
 from core.settings import SRAnalyzerSettings
 
@@ -42,7 +41,7 @@ class SRAnalyzer:
         """
         self._images.append(image)
 
-    def calculate(self) -> list[dict[str, Any]]:
+    def calculate(self) -> list[MetricResult]:
         """Calculate the metrics.
         
         :return: The calculated metrics.
@@ -58,7 +57,7 @@ class SRAnalyzer:
             raise RuntimeError("There is no image to calculate.")
 
         # Calculate the metrics.
-        results: list[dict[str, Any]] = []
+        results: list[MetricResult] = []
         for metric in self._metrics:
             for image in self._images:
                 keyword_args = {

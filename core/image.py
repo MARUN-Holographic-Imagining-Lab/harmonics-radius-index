@@ -6,10 +6,12 @@ from core.utils import read_image, save_image
 
 class Image:
     """Holds the image objects and preproceses if needed."""
-    def __init__(self, image_path: str or 'Image', name: str, preprocess: callable = None) -> None:
+    def __init__(self, image_path: str or 'Image' or ndarray,
+                 name: str, preprocess: callable = None) -> None:
         """Constructor of the Image class.
         
-        :param image_path: The path of the image or an Image object.
+        :param image_path: The path of the image, an Image object or 
+        NumPy Ndarray.
         :param name: The name of the image.
         :param preprocess: The preprocess function to be applied to the image.
         """
@@ -19,9 +21,14 @@ class Image:
         if isinstance(image_path, Image):
             self._path = None
             self._original_image = image_path.get_image()
-        else:
+        elif isinstance(image_path, str):
             self._path = image_path
             self._original_image = read_image(image_path)
+        elif isinstance(image_path, ndarray):
+            self._path = None
+            self._original_image = image_path
+        else:
+            raise ValueError("Image path must be a string or an Image object.")
 
         # Preprocess the image if needed.
         self._preprocess_function = preprocess
