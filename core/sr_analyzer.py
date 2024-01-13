@@ -11,7 +11,10 @@ class SRAnalyzer:
     """The main super resolution analyzer class."""
 
     def __init__(self, settings: SRAnalyzerSettings):
-        """Initialize the SRAnalyzer class."""
+        """Initialize the SRAnalyzer class.
+        
+        :param settings: The settings of the analyzer.
+        """
         self._settings = settings
         self._metrics: list[InterfaceMetric] = []
         self._reference: Image = None
@@ -19,19 +22,31 @@ class SRAnalyzer:
         self._is_done = False
 
     def add_metric(self, metric: InterfaceMetric) -> None:
-        """Add a metric to the analyzer."""
+        """Add a metric to the analyzer.
+        
+        :param metric: The metric to be added.
+        """
         self._metrics.append(metric)
 
     def add_reference_image(self, image: Image) -> None:
-        """Add a reference image to the analyzer."""
+        """Add a reference image to the analyzer.
+        
+        :param image: The reference image.
+        """
         self._reference = image
 
     def add_image(self, image: Image) -> None:
-        """Add an image to the analyzer."""
+        """Add an image to the analyzer.
+        
+        :param image: The image to be added.
+        """
         self._images.append(image)
 
     def calculate(self) -> list[dict[str, Any]]:
-        """Calculate the metrics."""
+        """Calculate the metrics.
+        
+        :return: The calculated metrics.
+        """
         # Check if the analyzer is done.
         if self._is_done:
             raise RuntimeError("The analyzer is already done.")

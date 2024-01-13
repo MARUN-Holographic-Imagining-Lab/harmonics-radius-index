@@ -17,12 +17,18 @@ class MetricResult:
         self.image_name: str = ""
 
     def __str__(self) -> str:
-        """Return the string representation of the metric."""
+        """Return the string representation of the metric.
+
+        :returns: The string representation of the metric.
+        """
         return f"{self.name}: {self.value} {self.unit} " \
                f"(ref: {self.reference_image_name}, comp: {self.image_name})"
 
     def to_dict(self) -> dict[str, Any]:
-        """Return the dictionary representation of the metric."""
+        """Return the dictionary representation of the metric.
+
+        :returns: The dictionary representation of the metric.
+        """
         return {
             "name": self.name,
             "value": self.value,
@@ -32,7 +38,11 @@ class MetricResult:
         }
 
     def register_image_names(self, reference_image_name: str, image_name: str) -> None:
-        """Register the image names."""
+        """Register the image names.
+
+        :param reference_image_name: The name of the reference image.
+        :param image_name: The name of the image.
+        """
         self.reference_image_name = reference_image_name
         self.image_name = image_name
 
@@ -46,8 +56,9 @@ class InterfaceMetric(metaclass=ABCMeta):
         """
         The function to calculate the metric.
 
-        Returns:
-            The calculated metric as MetricResult.
+        :param kwargs: The keywords needed to calculate the metric.
+        Check the keywords_needed property.
+        :returns: The calculated metric as MetricResult.
         """
 
     @property
@@ -56,7 +67,7 @@ class InterfaceMetric(metaclass=ABCMeta):
         """
         The keywords needed to calculate the metric.
 
-        Returns:
+        :return: The keywords needed.
             The keywords needed to calculate the metric.
             {
                 "keyword_name_1": keyword_type,

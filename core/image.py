@@ -7,6 +7,12 @@ from core.utils import read_image, save_image
 class Image:
     """Holds the image objects and preproceses if needed."""
     def __init__(self, image_path: str or 'Image', name: str, preprocess: callable = None) -> None:
+        """Constructor of the Image class.
+        
+        :param image_path: The path of the image or an Image object.
+        :param name: The name of the image.
+        :param preprocess: The preprocess function to be applied to the image.
+        """
         self._name = name
 
         # Read the image if it is Image or a path.
@@ -27,23 +33,31 @@ class Image:
     def get_image(self) -> ndarray:
         """
         Return the image.
+
+        :return: The image in NumPy ndarray.
         """
         return self._image
 
     def get_shape(self) -> tuple[int, int, int]:
         """
         Return the shape of the image.
+
+        :return: The shape of the image as (height, width, channels).
         """
         return self._image.shape
 
     def get_name(self) -> str:
         """
         Return the name of the image.
+
+        :return: The name of the image.
         """
         return self._name
 
     def save_image(self, path: str) -> None:
         """
         Save the image to the path.
+
+        :param path: The path to save the image.
         """
         save_image(self._image, path)

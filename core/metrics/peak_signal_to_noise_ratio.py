@@ -13,11 +13,19 @@ class PeakSignalToNoiseRatio(InterfaceMetric):
 
     @property
     def keywords_needed(self) -> dict[str, type]:
-        """The keywords needed to calculate the metric."""
+        """The keywords needed to calculate the metric.
+
+        :return: The keywords needed.
+        """
         return {"y_true": Image, "y_pred": Image}
 
     def calculate(self, **kwargs) -> MetricResult:
-        """Calculate the MSE metric."""
+        """Calculate the PSNR metric.
+
+        :param kwargs: The keywords needed to calculate the metric.
+        Check the keywords_needed property.
+        :return: The PSNR metric in a MetricResult object.
+        """
         # Check keywords.
         if not set(self.keywords_needed).issubset(kwargs):
             raise ValueError("Missing keywords needed to calculate the metric.")
