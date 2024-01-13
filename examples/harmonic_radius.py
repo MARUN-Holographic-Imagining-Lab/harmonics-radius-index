@@ -6,11 +6,11 @@ import numpy
 from skimage.metrics import structural_similarity
 
 from core.image import Image
-from core.utils import get_fft_of_image
+from core.utils import get_fft_of_image, draw_square_from_center
 
 
-def harmonic_radius(y_pred: Image,
-                    y_true: Image,
+def harmonic_radius(y_pred: Image | numpy.ndarray,
+                    y_true: Image  | numpy.ndarray,
                     success_thres: float = 0.95) -> float:
     """Calculate the Harmonics Radius' index.
     :param y_pred: The predicted image.
@@ -18,12 +18,20 @@ def harmonic_radius(y_pred: Image,
     :return: The Harmonics Radius' index.
     """
     # Check the shapes of the parameters.
-    if y_true.get_shape() != y_pred.get_shape():
+    y_true_shape = y_true.shape if isinstance(y_true, Image) else y_true.shape
+    y_pred_shape = y_pred.shape if isinstance(y_pred, Image) else y_pred.shape
+    if y_true_shape != y_pred_shape:
         raise ValueError("y_true and y_pred must have the same shape.")
 
     # Get the 2D magnitude spectrum in log scale.
-    fft_of_true: numpy.ndarray = get_fft_of_image(y_true.get_image(), scale_log=True)
-    fft_of_pred: numpy.ndarray = get_fft_of_image(y_pred.get_image(), scale_log=True)
+    fft_of_true: numpy.ndarray = get_fft_of_image(
+        y_true.get_image() if isinstance(y_true, Image) else y_true,
+        scale_log=True
+    )
+    fft_of_pred: numpy.ndarray = get_fft_of_image(
+        y_pred.get_image() if isinstance(y_pred, Image) else y_pred,
+        scale_log=True
+    )
 
     # Find the center point.
     pred_x_center = fft_of_pred.shape[0] // 2
@@ -52,6 +60,7 @@ def harmonic_radius(y_pred: Image,
 
         if ssim_result > success_thres:
             # The radius is the half of the grid size.
+            draw_square_from_center(fft_of_pred, (pred_x_center, pred_y_center), grid_size // 2)
             return grid_size // 2
 
         # Decrease the grid size by 2.
