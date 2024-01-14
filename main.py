@@ -22,9 +22,9 @@ from core.preprocessors import (
 
 if __name__ == "__main__":
     # Add images.
-    TRUE_IMAGE_PATH = "datasets/Set5/image_SRF_2/img_001_SRF_2_HR.png"
-    ESRGAN_RESULT = "datasets/results_hat_realesrgan/Real-ESRGAN/img_001_out.png"
-    HAT_RESULT = "datasets/results_hat_realesrgan/HAT/img_001_HAT_SRx2_ImageNet-pretrain.png"
+    TRUE_IMAGE_PATH = "true_image.png"
+    ESRGAN_RESULT = "esrgan_result.png"
+    HAT_RESULT = "hat_result.png"
 
     high_resolution_image   = Image(TRUE_IMAGE_PATH, name="high_resolution")
     shapes = high_resolution_image.get_shape()
