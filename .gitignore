@@ -1,4 +1,6 @@
 *.png
+*.mp4
+*.csv
 test.py
 .DS_Store
 
