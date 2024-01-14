@@ -51,6 +51,8 @@ def get_fft_of_image(image: ndarray, scale_log: bool = True) -> ndarray:
 
     if scale_log:
         fft_image = np_log(1 + np_abs(fft_image))
+    else:
+        fft_image = np_abs(fft_image)
     return fft_image
 
 def show_fft_image(fft_image: ndarray, title: str = "FFT Image") -> None:
