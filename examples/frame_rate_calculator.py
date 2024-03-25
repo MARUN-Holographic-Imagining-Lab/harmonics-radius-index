@@ -20,12 +20,12 @@ if __name__ == "__main__":
         IMAGE_ESRGAN = "esrgan_image.png"
 
         # Read images.
-        original    = Image(IMAGE_ORIGINAL, name="original")
-        linear      = Image(IMAGE_LINEAR, name="linear")
-        neighbour   = Image(IMAGE_NEIGHBOUR, name="neighbour")
-        bicubic     = Image(IMAGE_BICUBIC, name="bicubic")
-        hat         = Image(IMAGE_HAT, name="hat")
-        esrgan      = Image(IMAGE_ESRGAN, name="esrgan")
+        original = Image(IMAGE_ORIGINAL, name="original")
+        linear = Image(IMAGE_LINEAR, name="linear")
+        neighbour = Image(IMAGE_NEIGHBOUR, name="neighbour")
+        bicubic = Image(IMAGE_BICUBIC, name="bicubic")
+        hat = Image(IMAGE_HAT, name="hat")
+        esrgan = Image(IMAGE_ESRGAN, name="esrgan")
         test_images = [linear, neighbour, bicubic, hat, esrgan]
 
         # Calculate the average time consumed by the harmonic radius function

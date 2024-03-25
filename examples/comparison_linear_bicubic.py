@@ -26,16 +26,16 @@ if __name__ == "__main__":
     REAL_ESRGAN_PATH = "esrgan_image.png"
     HAT_PATH = "hat_image.png"
 
-    high_resolution_image   = Image(TRUE_IMAGE_PATH, name="high_resolution")
-    low_resolution_image    = Image(LOW_PATH, name="low_resolution")
-    zero_order_image        = Image(low_resolution_image, name="neighbour",
-                                    preprocess=lambda img: nearest_upscale(img, 2))
-    linear_image            = Image(low_resolution_image, name="linear",
-                                    preprocess=lambda img: linear_upscale(img, 2))
-    bicubic_image           = Image(low_resolution_image, name="bicubic",
-                                    preprocess=lambda img: bicubic_upscale(img, 2))
-    hat_image               = Image(HAT_PATH, name="HAT")
-    real_esrgan_image       = Image(REAL_ESRGAN_PATH, name="Real-ESRGAN")
+    high_resolution_image = Image(TRUE_IMAGE_PATH, name="high_resolution")
+    low_resolution_image = Image(LOW_PATH, name="low_resolution")
+    zero_order_image = Image(low_resolution_image, name="neighbour",
+                             preprocess=lambda img: nearest_upscale(img, 2))
+    linear_image = Image(low_resolution_image, name="linear",
+                         preprocess=lambda img: linear_upscale(img, 2))
+    bicubic_image = Image(low_resolution_image, name="bicubic",
+                          preprocess=lambda img: bicubic_upscale(img, 2))
+    hat_image = Image(HAT_PATH, name="HAT")
+    real_esrgan_image = Image(REAL_ESRGAN_PATH, name="Real-ESRGAN")
 
     analyzer = SRAnalyzer(
         SRAnalyzerSettings(name="SuperResolution Example")

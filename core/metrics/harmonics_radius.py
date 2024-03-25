@@ -6,7 +6,9 @@ from skimage.metrics import structural_similarity
 
 from core.image import Image
 from core.metrics.interface_metric import InterfaceMetric, MetricResult
-from core.utils import get_fft_of_image, draw_square_from_center
+from core.utils import get_fft_of_image
+#  from core.utils import draw_square_from_center
+
 
 class HarmonicsRadius(InterfaceMetric):
     """The HRI95 metric."""
@@ -21,7 +23,7 @@ class HarmonicsRadius(InterfaceMetric):
 
     def calculate(self, **kwargs) -> MetricResult:
         """Calculate the HRI95.
-        
+
         :param kwargs: The keywords needed to calculate the metric.
         Check the keywords_needed property.
 
@@ -29,7 +31,8 @@ class HarmonicsRadius(InterfaceMetric):
         """
         # Check keywords.
         if not set(self.keywords_needed).issubset(kwargs):
-            raise ValueError("Missing keywords needed to calculate the metric.")
+            raise ValueError(
+                "Missing keywords needed to calculate the metric.")
 
         # Get the parameters.
         y_true = kwargs["y_true"]
@@ -46,8 +49,10 @@ class HarmonicsRadius(InterfaceMetric):
             raise ValueError("y_true and y_pred must have the same shape.")
 
         # Convert images to greyscale.
-        fft_of_true: numpy.ndarray = get_fft_of_image(y_true.get_image(), scale_log=True)
-        fft_of_pred: numpy.ndarray = get_fft_of_image(y_pred.get_image(), scale_log=True)
+        fft_of_true: numpy.ndarray = get_fft_of_image(
+            y_true.get_image(), scale_log=True)
+        fft_of_pred: numpy.ndarray = get_fft_of_image(
+            y_pred.get_image(), scale_log=True)
 
         # Find the center point.
         pred_x_center = fft_of_pred.shape[0] // 2
@@ -57,12 +62,12 @@ class HarmonicsRadius(InterfaceMetric):
         while True:
             # Get the grid.
             grid_pred = fft_of_pred[
-                pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
-                pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
+                pred_x_center - grid_size//2: pred_x_center + grid_size//2,
+                pred_y_center - grid_size//2: pred_y_center + grid_size//2,
             ]
             grid_true = fft_of_true[
-                pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
-                pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
+                pred_x_center - grid_size//2: pred_x_center + grid_size//2,
+                pred_y_center - grid_size//2: pred_y_center + grid_size//2,
             ]
 
             # Check the SSIM of the grid.
@@ -77,9 +82,9 @@ class HarmonicsRadius(InterfaceMetric):
                 # The radius is the half of the grid size.
                 radius = grid_size // 2
 
-                draw_square_from_center(fft_of_pred, (pred_x_center, pred_y_center), radius)
+                # draw_square_from_center(fft_of_pred, (pred_x_center, pred_y_center), radius)
                 return MetricResult(
-                    metric_name="harmonics_radius",
+                    metric_name="HRI95",
                     metric_value=radius,
                     metric_unit="px"
                 )

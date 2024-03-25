@@ -47,9 +47,11 @@ if __name__ == "__main__":
     high_res_image = cv2.imread(HIGH_RES_PATH, cv2.IMREAD_GRAYSCALE)
     hat_image = cv2.imread(GENERATED_PATH, cv2.IMREAD_GRAYSCALE)
 
-    # Settings
-    SUB_IMAGE_SIZE = {"width": high_res_image.shape[0]//4, "height": high_res_image.shape[1]//4}
-    SLIDE_SIZE = {"width": high_res_image.shape[0]//8, "height": high_res_image.shape[1]//8}
+    #  Settings
+    SUB_IMAGE_SIZE = {
+        "width": high_res_image.shape[0]//4, "height": high_res_image.shape[1]//4}
+    SLIDE_SIZE = {
+        "width": high_res_image.shape[0]//8, "height": high_res_image.shape[1]//8}
     HRI_SUCCESS_THRES = 0.95
     SHOW_SUB_IMAGE_LOCATIONS = False
     SHOW_SUB_IMAGE_METRICS = False
@@ -65,7 +67,7 @@ if __name__ == "__main__":
           f"\t-{SHOW_SUB_IMAGE_METRICS=},\n"
           f"\t-{SAVE_METRICS_TO_CSV=},\n"
           f"\t-{SAVE_VIDEO_SUB_IMAGE_METRICS=},\n"
-        f"\t-{CALCULATE_AVERAGE_METRICS=},\n",
+          f"\t-{CALCULATE_AVERAGE_METRICS=},\n",
           f"\t-{RESIZE_FACTOR=}\n")
 
     # Read the images and calculate their Fourier mags.
@@ -78,10 +80,11 @@ if __name__ == "__main__":
     print(f"Image size: {width=}, {height=}")
 
     # Check if sub image size is valid.
-    if sub_width > width or sub_height > height :
-        raise ValueError("Sub image size cannot be greater than the image size.")
+    if sub_width > width or sub_height > height:
+        raise ValueError(
+            "Sub image size cannot be greater than the image size.")
 
-    # Check if image sizes can be divided by sub image size.
+    #  Check if image sizes can be divided by sub image size.
     if width % sub_width != 0 or height % sub_height != 0:
         raise ValueError("Image sizes must be divided by sub image size.")
 
@@ -109,14 +112,16 @@ if __name__ == "__main__":
                 fft_uint8 = (hr_fft / hr_fft.max() * 255).astype("uint8")
                 # Add +15 white pixels to the right and bottom of the image.
                 fft_uint8 = cv2.copyMakeBorder(fft_uint8, 15, 15, 15, 15,
-                                            cv2.BORDER_CONSTANT,
-                                            value=(255, 255, 255))
+                                               cv2.BORDER_CONSTANT,
+                                               value=(255, 255, 255))
                 fft_uint8 = cv2.cvtColor(fft_uint8, cv2.COLOR_GRAY2BGR)
                 for sub_image_loc in sub_image_locations:
                     cv2.rectangle(
                         fft_uint8,
-                        (sub_image_loc["start_width"]+15, sub_image_loc["start_height"]+15),
-                        (sub_image_loc["end_width"]+15, sub_image_loc["end_height"]+15),
+                        (sub_image_loc["start_width"]+15,
+                         sub_image_loc["start_height"]+15),
+                        (sub_image_loc["end_width"]+15,
+                         sub_image_loc["end_height"]+15),
                         (0, 0, 255),
                         1
                     )
@@ -127,7 +132,7 @@ if __name__ == "__main__":
                 del fft_uint8
     # Add the last sub image location.
     print("Sub image locations are calculated. %d sub images found.",
-                 len(sub_image_locations))
+          len(sub_image_locations))
 
     # Create the sub image pairs.
     print("Creating sub image pairs...")
@@ -153,7 +158,7 @@ if __name__ == "__main__":
             location_height_end=sub_img_loc["end_height"],
         ))
     print("Sub image pairs are created. %d sub image pairs found.",
-                    len(sub_image_pairs))
+          len(sub_image_pairs))
 
     # Calculate the HRI95 for each sub image pair.
     print("Calculating HRI95, PSNR, SSIM, MSE for each sub image pair...")
@@ -171,12 +176,12 @@ if __name__ == "__main__":
         while True:
             # Get the grid.
             grid_pred = sub_image_pair.generated[
-                pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
-                pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
+                pred_x_center - grid_size//2: pred_x_center + grid_size//2,
+                pred_y_center - grid_size//2: pred_y_center + grid_size//2,
             ]
             grid_true = sub_image_pair.original[
-                pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
-                pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
+                pred_x_center - grid_size//2: pred_x_center + grid_size//2,
+                pred_y_center - grid_size//2: pred_y_center + grid_size//2,
             ]
 
             # Check the results of the grid.
@@ -218,7 +223,6 @@ if __name__ == "__main__":
             sub_image_pairs[index].result_hri95 = 0
     print("HRI95, PSNR, SSIM, MSE are calculated.")
 
-
     if SHOW_SUB_IMAGE_METRICS:
         # Convert the FFT into an image with 0->255 range.
         # Draw the sub-image locations with red rectangles.
@@ -231,7 +235,7 @@ if __name__ == "__main__":
         # Convert fft_uint8 to MatLike and resize it by x4.
         fft_uint8 = cv2.cvtColor(fft_uint8, cv2.COLOR_GRAY2BGR)
         fft_uint8 = cv2.resize(fft_uint8,
-                            (fft_uint8.shape[1] * RESIZE_FACTOR,
+                               (fft_uint8.shape[1] * RESIZE_FACTOR,
                                 fft_uint8.shape[0] * RESIZE_FACTOR))
 
         print("Drawing sub image locations...")
@@ -240,9 +244,11 @@ if __name__ == "__main__":
             cv2.rectangle(
                 fft_uint8,
                 (sub_image_pair.location_width_start*RESIZE_FACTOR,
-                sub_image_pair.location_height_start*RESIZE_FACTOR),
-                (sub_image_pair.location_width_start*RESIZE_FACTOR + (SUB_IMAGE_SIZE["width"] * RESIZE_FACTOR),
-                sub_image_pair.location_height_start*RESIZE_FACTOR + (SUB_IMAGE_SIZE["height"] * RESIZE_FACTOR)),
+                 sub_image_pair.location_height_start*RESIZE_FACTOR),
+                (sub_image_pair.location_width_start*RESIZE_FACTOR +
+                 (SUB_IMAGE_SIZE["width"] * RESIZE_FACTOR),
+                 sub_image_pair.location_height_start*RESIZE_FACTOR +
+                 (SUB_IMAGE_SIZE["height"] * RESIZE_FACTOR)),
                 (0, 0, 255),
                 1
             )
@@ -252,8 +258,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_hri95}px",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
@@ -266,8 +274,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_psnr:.1f}dB",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2-10,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2+15
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2-10,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2+15
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
@@ -280,8 +290,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_ssim:.2f}",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2-10,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2+30
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2-10,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2+30
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
@@ -294,8 +306,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_mse:.2f}px2",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2-10,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2+50
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2-10,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2+50
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
@@ -308,16 +322,17 @@ if __name__ == "__main__":
         # Save the results into metadata.
         print("Saving the results into CSV file...")
         with open("results.csv", "w", encoding="utf-8") as file:
-            file.write("X_start, X_end, Y_start, Y_end, HRI95, PSNR, SSIM, MSE\n")
+            file.write(
+                "X_start, X_end, Y_start, Y_end, HRI95, PSNR, SSIM, MSE\n")
             for sub_image_pair in sub_image_pairs:
                 file.write(f"{sub_image_pair.location_width_start},"
-                        f"{sub_image_pair.location_width_end},"
-                        f"{sub_image_pair.location_height_start},"
-                        f"{sub_image_pair.location_height_end},"
-                        f"{sub_image_pair.result_hri95},"
-                        f"{sub_image_pair.result_psnr},"
-                        f"{sub_image_pair.result_ssim},"
-                        f"{sub_image_pair.result_mse}\n")
+                           f"{sub_image_pair.location_width_end},"
+                           f"{sub_image_pair.location_height_start},"
+                           f"{sub_image_pair.location_height_end},"
+                           f"{sub_image_pair.result_hri95},"
+                           f"{sub_image_pair.result_psnr},"
+                           f"{sub_image_pair.result_ssim},"
+                           f"{sub_image_pair.result_mse}\n")
         print("Results are saved into CSV file.")
 
     if SAVE_VIDEO_SUB_IMAGE_METRICS:
@@ -335,16 +350,18 @@ if __name__ == "__main__":
             fft_uint8 = (hr_fft / hr_fft.max() * 255).astype("uint8")
             fft_uint8 = cv2.cvtColor(fft_uint8, cv2.COLOR_GRAY2BGR)
             fft_uint8 = cv2.resize(fft_uint8,
-                            (fft_uint8.shape[1] * RESIZE_FACTOR,
-                                fft_uint8.shape[0] * RESIZE_FACTOR))
+                                   (fft_uint8.shape[1] * RESIZE_FACTOR,
+                                    fft_uint8.shape[0] * RESIZE_FACTOR))
 
             # Draw the red rectangle.
             cv2.rectangle(
                 fft_uint8,
                 (sub_image_pair.location_width_start*RESIZE_FACTOR,
-                sub_image_pair.location_height_start*RESIZE_FACTOR),
-                (sub_image_pair.location_width_start*RESIZE_FACTOR + (SUB_IMAGE_SIZE["width"] * RESIZE_FACTOR),
-                sub_image_pair.location_height_start*RESIZE_FACTOR + (SUB_IMAGE_SIZE["height"] * RESIZE_FACTOR)),
+                 sub_image_pair.location_height_start*RESIZE_FACTOR),
+                (sub_image_pair.location_width_start*RESIZE_FACTOR +
+                 (SUB_IMAGE_SIZE["width"] * RESIZE_FACTOR),
+                 sub_image_pair.location_height_start*RESIZE_FACTOR +
+                 (SUB_IMAGE_SIZE["height"] * RESIZE_FACTOR)),
                 (0, 0, 255),
                 4
             )
@@ -354,8 +371,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_hri95}px",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 30,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 20
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 30,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 20
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1.5,
@@ -368,8 +387,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_psnr:.1f}dB",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 15,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 70
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 15,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 70
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1.5,
@@ -382,8 +403,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_ssim:.2f}",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 15,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 120
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 15,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 120
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1.5,
@@ -396,8 +419,10 @@ if __name__ == "__main__":
                 fft_uint8,
                 f"{sub_image_pair.result_mse:.2f}px2",
                 (
-                    sub_image_pair.location_width_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 15,
-                    sub_image_pair.location_height_start*RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 170
+                    sub_image_pair.location_width_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["width"]//2 + 15,
+                    sub_image_pair.location_height_start *
+                    RESIZE_FACTOR + SUB_IMAGE_SIZE["height"]//2 + 170
                 ),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1.5,
@@ -410,7 +435,7 @@ if __name__ == "__main__":
 
         video_writer.release()
         print("Results are shown one by one per sub image.")
-    
+
     if CALCULATE_AVERAGE_METRICS:
         # Calculate the average metrics.
         print("Calculating the average metrics...")

@@ -1,6 +1,7 @@
 ""
 from PIL import Image
 
+
 def combine_and_save_images(image_path1, image_path2, output_path):
     """Combines two images next to each other and saves the result.
 
@@ -34,6 +35,7 @@ def combine_and_save_images(image_path1, image_path2, output_path):
 
     # Save the result to the specified output path
     new_image.save(output_path)
+
 
 if __name__ == "__main__":
     # Provide the file paths for your two images and the desired output path

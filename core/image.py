@@ -4,13 +4,15 @@ Holds the Image class to be used in the analisys.
 from numpy import ndarray
 from core.utils import read_image, save_image
 
+
 class Image:
     """Holds the image objects and preproceses if needed."""
+
     def __init__(self, image_path: str or 'Image' or ndarray,
                  name: str, preprocess: callable = None) -> None:
         """Constructor of the Image class.
-        
-        :param image_path: The path of the image, an Image object or 
+
+        :param image_path: The path of the image, an Image object or
         NumPy Ndarray.
         :param name: The name of the image.
         :param preprocess: The preprocess function to be applied to the image.

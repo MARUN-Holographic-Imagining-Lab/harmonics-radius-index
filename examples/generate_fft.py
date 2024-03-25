@@ -1,5 +1,5 @@
 """
-This script generates the FFT of an image 
+This script generates the FFT of an image
 and plots the spatial domain image, FFT
 magnitudes and FFT phases in log domain.
 """
@@ -12,7 +12,8 @@ if __name__ == "__main__":
     IMAGE_PATH = "image.png"
 
     # Read the image.
-    image = cv2.imread(IMAGE_PATH, cv2.IMREAD_GRAYSCALE)  # pylint: disable=no-member
+    image = cv2.imread(
+        IMAGE_PATH, cv2.IMREAD_GRAYSCALE)  # pylint: disable=no-member
     # Show the image.
     cv2.imshow("Image", image)
 

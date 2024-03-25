@@ -6,6 +6,7 @@ from core.image import Image
 from core.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
 from core.metrics import StructuralSimilarityIndex, HarmonicsRadius
 
+
 def circler_colours(image):
     """
     Change the color of the image.
@@ -15,6 +16,7 @@ def circler_colours(image):
     image[:, :, 1] = image[:, :, 2]
     image[:, :, 2] = temp
     return image
+
 
 if __name__ == "__main__":
     # Settings
@@ -26,11 +28,11 @@ if __name__ == "__main__":
     IMAGE_LINEAR = "linear_image.png"
 
     # Read images.
-    original    = Image(ORIGINAL_IMAGE, name="original")
-    hat         = Image(IMAGE_HAT, name="hat", preprocess=circler_colours)
-    linear      = Image(IMAGE_LINEAR, name="linear")
+    original = Image(ORIGINAL_IMAGE, name="original")
+    hat = Image(IMAGE_HAT, name="hat", preprocess=circler_colours)
+    linear = Image(IMAGE_LINEAR, name="linear")
 
-    # Save the image.
+    #  Save the image.
     hat.save_image("save_here.png")
 
     # Create the analyzer.

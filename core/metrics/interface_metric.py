@@ -8,6 +8,7 @@ from typing import Any
 
 class MetricResult:
     """Hold the result of a metric."""
+
     def __init__(self, metric_name: str, metric_value: Any, metric_unit: str):
         self.name = metric_name
         self.value = metric_value
@@ -22,7 +23,7 @@ class MetricResult:
         :returns: The string representation of the metric.
         """
         return f"{self.name}: {self.value} {self.unit} " \
-               f"(ref: {self.reference_image_name}, comp: {self.image_name})"
+            f"(ref: {self.reference_image_name}, comp: {self.image_name})"
 
     def to_dict(self) -> dict[str, Any]:
         """Return the dictionary representation of the metric.
@@ -45,7 +46,6 @@ class MetricResult:
         """
         self.reference_image_name = reference_image_name
         self.image_name = image_name
-
 
 
 class InterfaceMetric(metaclass=ABCMeta):

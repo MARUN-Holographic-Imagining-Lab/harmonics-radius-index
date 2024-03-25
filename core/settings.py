@@ -1,5 +1,5 @@
 """
-Holds Analyzer settings. 
+Holds Analyzer settings
 """
 from dataclasses import dataclass
 

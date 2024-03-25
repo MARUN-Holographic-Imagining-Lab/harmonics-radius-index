@@ -11,7 +11,7 @@ class SRAnalyzer:
 
     def __init__(self, settings: SRAnalyzerSettings):
         """Initialize the SRAnalyzer class.
-        
+
         :param settings: The settings of the analyzer.
         """
         self._settings = settings
@@ -22,28 +22,28 @@ class SRAnalyzer:
 
     def add_metric(self, metric: InterfaceMetric) -> None:
         """Add a metric to the analyzer.
-        
+
         :param metric: The metric to be added.
         """
         self._metrics.append(metric)
 
     def add_reference_image(self, image: Image) -> None:
         """Add a reference image to the analyzer.
-        
+
         :param image: The reference image.
         """
         self._reference = image
 
     def add_image(self, image: Image) -> None:
         """Add an image to the analyzer.
-        
+
         :param image: The image to be added.
         """
         self._images.append(image)
 
     def calculate(self) -> list[MetricResult]:
         """Calculate the metrics.
-        
+
         :return: The calculated metrics.
         """
         # Check if the analyzer is done.

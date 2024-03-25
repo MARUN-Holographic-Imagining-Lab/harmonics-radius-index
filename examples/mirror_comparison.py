@@ -6,11 +6,13 @@ from core.image import Image
 from core.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
 from core.metrics import StructuralSimilarityIndex, HarmonicsRadius
 
+
 def mirror_image_in_xy(image):
     """
     Mirror the image in the x and y axis.
     """
     return image[::-1, ::-1, :]
+
 
 if __name__ == "__main__":
     # Settings
@@ -21,11 +23,12 @@ if __name__ == "__main__":
     IMAGE_LINEAR = f"datasets/linear_results/image_{IMAGE_NO}_x2.png"
 
     # Read images.
-    original    = Image(f"datasets/Set5/image_SRF_2/img_00{IMAGE_NO}_SRF_2_HR.png", name="original")
-    hat         = Image(IMAGE_HAT, name="hat", preprocess=mirror_image_in_xy)
-    linear      = Image(IMAGE_LINEAR, name="linear")
+    original = Image(
+        f"datasets/Set5/image_SRF_2/img_00{IMAGE_NO}_SRF_2_HR.png", name="original")
+    hat = Image(IMAGE_HAT, name="hat", preprocess=mirror_image_in_xy)
+    linear = Image(IMAGE_LINEAR, name="linear")
 
-    # Save the image.
+    #  Save the image.
     hat.save_image(f"datasets/hat_results/image_{IMAGE_NO}_x2-mirror-xy.png")
 
     # Create the analyzer.

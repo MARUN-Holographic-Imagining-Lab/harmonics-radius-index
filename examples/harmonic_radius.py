@@ -10,7 +10,7 @@ from core.utils import get_fft_of_image, draw_square_from_center
 
 
 def harmonic_radius(y_pred: Image | numpy.ndarray,
-                    y_true: Image  | numpy.ndarray,
+                    y_true: Image | numpy.ndarray,
                     success_thres: float = 0.95) -> float:
     """Calculate the Harmonics Radius' index.
     :param y_pred: The predicted image.
@@ -42,12 +42,12 @@ def harmonic_radius(y_pred: Image | numpy.ndarray,
     while True:
         # Get the grid.
         grid_pred = fft_of_pred[
-            pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
-            pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
+            pred_x_center - grid_size//2: pred_x_center + grid_size//2,
+            pred_y_center - grid_size//2: pred_y_center + grid_size//2,
         ]
         grid_true = fft_of_true[
-            pred_x_center - grid_size//2 : pred_x_center + grid_size//2,
-            pred_y_center - grid_size//2 : pred_y_center + grid_size//2,
+            pred_x_center - grid_size//2: pred_x_center + grid_size//2,
+            pred_y_center - grid_size//2: pred_y_center + grid_size//2,
         ]
 
         # Check the SSIM of the grid.
@@ -60,7 +60,8 @@ def harmonic_radius(y_pred: Image | numpy.ndarray,
 
         if ssim_result > success_thres:
             # The radius is the half of the grid size.
-            draw_square_from_center(fft_of_pred, (pred_x_center, pred_y_center), grid_size // 2)
+            draw_square_from_center(
+                fft_of_pred, (pred_x_center, pred_y_center), grid_size // 2)
             return grid_size // 2
 
         # Decrease the grid size by 2.
