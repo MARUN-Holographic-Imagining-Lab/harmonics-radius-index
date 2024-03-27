@@ -74,4 +74,4 @@ if __name__ == "__main__":
     print("Predicted Image: ", images['predicted'])
     print("")
     for result in results:
-        print(f"- {result.name}: {result.value:.2f} {result.unit}")
+        print(f"- {result.name}: {result.value:.3f} {result.unit}")
