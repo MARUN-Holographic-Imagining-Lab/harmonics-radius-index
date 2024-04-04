@@ -37,6 +37,10 @@ class HarmonicsRadius(InterfaceMetric):
         # Get the parameters.
         y_true = kwargs["y_true"]
         y_pred = kwargs["y_pred"]
+        if kwargs["custom_threshold"] is not None:
+            threshold = kwargs["custom_threshold"]
+        else:
+            threshold = 0.95
 
         # Check the types of the parameters.
         if not isinstance(y_true, Image):
@@ -78,7 +82,7 @@ class HarmonicsRadius(InterfaceMetric):
                 multichannel=False,
             )
 
-            if ssim_result > 0.95:
+            if ssim_result > threshold:
                 # The radius is the half of the grid size.
                 radius = grid_size // 2
 
