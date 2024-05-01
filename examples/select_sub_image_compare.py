@@ -1,72 +1,74 @@
 """
 1. Compute bicubic interpolation of 2x upscale.
 2. Select a subset of HR image.
-3. Select 15px left from the previous selected subset of HAT and Bicubic.
+3. Select 15px left from the previous selected subset of hr and Bicubic.
 3. Compute the metrics comparingly original one.
 """
 
 from core.image import Image
-from core.preprocessors import bicubic_upscale
 from core.metrics import HarmonicsRadius, StructuralSimilarityIndex
 
 # Shift amount
-SHIFT_AMOUNT = 10
+SHIFT_AMOUNT_PERC = 4
+REDUCE_SHIFT_AMOUNT_PERC = 1
 HRI_THRESHOLD = 0.95
+IMAGE_SIZE = 288
 
-if __name__ == "__main__":
+
+while SHIFT_AMOUNT_PERC > 0:
+    print("####")
+    print(f"PIXEL SHIFT AMOUNT: {SHIFT_AMOUNT_PERC}%")
+
     # Return the file paths of the images.
     images = {
         "hr": "images/hr.png",
-        "hat": "images/hat.png",
-        "lr": "images/lr.png"
     }
 
+    # Shift amount in pixels.
+    SHIFT_AMOUNT = int(288 * SHIFT_AMOUNT_PERC / 100)
+    print(f"PIXEL SHIFT AMOUNT: {SHIFT_AMOUNT}px")
+
     # Select a subset of HR image.
-    hr_image_subset = Image(
-        Image(images['hr'], name="hr_image")
+    hr_image_shifted = Image(
+        Image(images['hr'], name="hr_image_shifted")
+        .get_image()[0:288, SHIFT_AMOUNT:288],
+        name="hr_image_shifted"
+    )
+    hr_image_normal = Image(
+        Image(images['hr'], name="hr_image_normal")
         .get_image()[0:288, 0:(288-SHIFT_AMOUNT)],
-        name="hr_image_subset"
+        name="hr_image_normal"
     )
-    hat_image = Image(
-        Image(images['hat'], name="hat_image")
-        .get_image()[0:288, SHIFT_AMOUNT:288],
-        name="hat_image_subset"
-    )
-    bicubic_image = Image(
-        Image(
-            Image(images['lr'], name="lr_image"),
-            name="bicubic",
-            preprocess=lambda img: bicubic_upscale(img, 2)
-        )
-        .get_image()[0:288, SHIFT_AMOUNT:288],
-        name="bicubic_image_subset")
 
     # Analyze.
-    hri85_hat = HarmonicsRadius()\
-        .calculate(y_true=hr_image_subset,
-                   y_pred=hat_image,
+    hri85_hr_shifted = HarmonicsRadius()\
+        .calculate(y_true=hr_image_normal,
+                   y_pred=hr_image_shifted,
                    custom_threshold=HRI_THRESHOLD)
-    hri85_bicubic = HarmonicsRadius()\
-        .calculate(y_true=hr_image_subset,
-                   y_pred=bicubic_image,
+    hri85_hr_normal = HarmonicsRadius()\
+        .calculate(y_true=hr_image_normal,
+                   y_pred=hr_image_normal,
                    custom_threshold=HRI_THRESHOLD)
-    ssim_hat = StructuralSimilarityIndex()\
-        .calculate(y_true=hr_image_subset,
-                   y_pred=hat_image)
-    ssim_bicubic = StructuralSimilarityIndex()\
-        .calculate(y_true=hr_image_subset,
-                   y_pred=bicubic_image)
+    ssim_hr_shifted = StructuralSimilarityIndex()\
+        .calculate(y_true=hr_image_normal,
+                   y_pred=hr_image_shifted)
+    ssim_hr_normal = StructuralSimilarityIndex()\
+        .calculate(y_true=hr_image_normal,
+                   y_pred=hr_image_normal)
 
-    print(f"HRI85(HAT): {hri85_hat.value}")
-    print(f"HRI85(Bicubic): {hri85_bicubic.value}")
-    print(f"SSIM(HAT): {ssim_hat.value}")
-    print(f"SSIM(Bicubic): {ssim_bicubic.value}")
+    print(f"HRI{int(HRI_THRESHOLD*100)
+                } - HR Shifted: {hri85_hr_shifted.value}")
+    print(f"HRI{int(HRI_THRESHOLD*100)} - HR Normal: {hri85_hr_normal.value}")
+    print(f"SSIM - HR Shifted: {ssim_hr_shifted.value}")
+    print(f"SSIM - HR Normal: {ssim_hr_normal.value}")
 
     # Check the differences in percentage.
-    hri85_diff = (hri85_hat.value - hri85_bicubic.value) / \
-        hri85_hat.value * 100
-    ssim_diff = abs(ssim_hat.value - ssim_bicubic.value) / \
-        ssim_hat.value * 100
+    hri85_diff = abs(hri85_hr_shifted.value - hri85_hr_normal.value) / \
+        hri85_hr_normal.value * 100
+    ssim_diff = abs(ssim_hr_shifted.value - ssim_hr_normal.value) / \
+        ssim_hr_normal.value * 100
 
     print(f"HRI85 Diff: {hri85_diff:.2f}%")
     print(f"SSIM Diff: {ssim_diff:.2f}%")
+
+    SHIFT_AMOUNT_PERC -= REDUCE_SHIFT_AMOUNT_PERC
