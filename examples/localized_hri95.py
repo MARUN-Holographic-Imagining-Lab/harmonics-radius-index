@@ -29,7 +29,9 @@ class SubImagePair:
     result_mse: float = None
 
 
-def get_sub_image(image: ndarray, location: tuple[int, int], size: tuple[int, int]) -> ndarray:
+def get_sub_image(image: ndarray,
+                  location: tuple[int, int],
+                  size: tuple[int, int]) -> ndarray:
     """
     Returns the sub image at the given location.
     :param image: Image.
@@ -37,27 +39,30 @@ def get_sub_image(image: ndarray, location: tuple[int, int], size: tuple[int, in
     :param size: Sub image size.
     :return: Sub image.
     """
-    return image[location[0]:location[0] + size[0], location[1]:location[1] + size[1]]
+    return image[location[0]:location[0] + size[0],
+                 location[1]:location[1] + size[1]]
 
 
 if __name__ == "__main__":
     # Paths
-    HIGH_RES_PATH = "hr_image.png"
-    GENERATED_PATH = "generated_image.png"
+    HIGH_RES_PATH = "images/hr.png"
+    GENERATED_PATH = "images/hat.png"
     high_res_image = cv2.imread(HIGH_RES_PATH, cv2.IMREAD_GRAYSCALE)
     hat_image = cv2.imread(GENERATED_PATH, cv2.IMREAD_GRAYSCALE)
 
     #  Settings
     SUB_IMAGE_SIZE = {
-        "width": high_res_image.shape[0]//4, "height": high_res_image.shape[1]//4}
+        "width": high_res_image.shape[0]//4,
+        "height": high_res_image.shape[1]//4}
     SLIDE_SIZE = {
-        "width": high_res_image.shape[0]//8, "height": high_res_image.shape[1]//8}
+        "width": high_res_image.shape[0]//8,
+        "height": high_res_image.shape[1]//8}
     HRI_SUCCESS_THRES = 0.95
-    SHOW_SUB_IMAGE_LOCATIONS = False
-    SHOW_SUB_IMAGE_METRICS = False
-    SAVE_METRICS_TO_CSV = False
-    SAVE_VIDEO_SUB_IMAGE_METRICS = False
-    CALCULATE_AVERAGE_METRICS = True
+    SHOW_SUB_IMAGE_LOCATIONS = True
+    SHOW_SUB_IMAGE_METRICS = True
+    SAVE_METRICS_TO_CSV = True
+    SAVE_VIDEO_SUB_IMAGE_METRICS = True
+    CALCULATE_AVERAGE_METRICS = False
     RESIZE_FACTOR = 4
 
     print(f"Settings: \n\t-{SUB_IMAGE_SIZE=},\n"
@@ -91,8 +96,12 @@ if __name__ == "__main__":
     # Get the sub image locations as sliding window with sub_iamge size.
     print("Calculating sub image locations...")
     sub_image_locations = []
-    for width_index in range(0, width-SUB_IMAGE_SIZE["width"]+1, SLIDE_SIZE["width"]):
-        for height_index in range(0, height-SUB_IMAGE_SIZE["height"]+1, SLIDE_SIZE["height"]):
+    for width_index in range(0,
+                             width-SUB_IMAGE_SIZE["width"]+1,
+                             SLIDE_SIZE["width"]):
+        for height_index in range(0,
+                                  height-SUB_IMAGE_SIZE["height"]+1,
+                                  SLIDE_SIZE["height"]):
             sub_image_locations.append({
                 "start_width": width_index,
                 "start_height": height_index,
@@ -131,8 +140,8 @@ if __name__ == "__main__":
                 cv2.destroyAllWindows()
                 del fft_uint8
     # Add the last sub image location.
-    print("Sub image locations are calculated. %d sub images found.",
-          len(sub_image_locations))
+    print("Sub image locations are calculated."
+          f"{len(sub_image_locations)} sub images found.")
 
     # Create the sub image pairs.
     print("Creating sub image pairs...")
@@ -157,8 +166,8 @@ if __name__ == "__main__":
             location_width_end=sub_img_loc["end_width"],
             location_height_end=sub_img_loc["end_height"],
         ))
-    print("Sub image pairs are created. %d sub image pairs found.",
-          len(sub_image_pairs))
+    print(f"Sub image pairs are created. {
+          len(sub_image_pairs)} sub image pairs found.")
 
     # Calculate the HRI95 for each sub image pair.
     print("Calculating HRI95, PSNR, SSIM, MSE for each sub image pair...")
