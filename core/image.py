@@ -25,7 +25,12 @@ class Image:
             self._original_image = image_path.get_image()
         elif isinstance(image_path, str):
             self._path = image_path
-            self._original_image = read_image(image_path)
+            try:
+                self._original_image = read_image(image_path)
+            except Exception as e:
+                raise ValueError(f"Error while reading the image: {e}.")
+            if self._original_image is None:
+                raise ValueError("Error while reading the image.")
         elif isinstance(image_path, ndarray):
             self._path = None
             self._original_image = image_path
