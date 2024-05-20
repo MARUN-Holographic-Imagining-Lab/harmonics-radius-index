@@ -83,12 +83,12 @@ class HarmonicsRadius(InterfaceMetric):
                 multichannel=False,
             )
 
-            draw_square_from_center(
-                fft_of_pred,
-                (pred_x_center,
-                 pred_y_center),
-                grid_size//2,
-            )
+            # draw_square_from_center(
+            #     fft_of_pred,
+            #     (pred_x_center,
+            #      pred_y_center),
+            #     grid_size//2,
+            # )
             if ssim_result > self.THRESHOLD:
                 # The radius is the half of the grid size.
                 found_radius: int = grid_size / 2
