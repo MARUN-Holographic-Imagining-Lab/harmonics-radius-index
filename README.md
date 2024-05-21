@@ -1,8 +1,29 @@
 # Harmonics Radius Index
+Harmonics Radius Index is a performance index for evaluating the quality of super-resolution images. It is based on the harmonic mean of the radii of the circles that contain the same amount of energy in the Fourier domain of the true and predicted images.
 
-The description will be added soon.
+Please refer to the following paper for more details:
 
-### Example API Usage
+```
+The paper is under review. Please check back later.
+```
+
+
+## Installation & Usage
+First run for hr95 program may take a while, however, it will be faster in the following runs.
+
+```bash
+pip install harmonicsradius
+hri95 -t <true_image_path> -p <predicted_image_path>
+```
+
+## API
+The harmonicsradius package provides an API for calculating the Harmonics Radius Index and other image quality metrics. The API is designed to be simple and easy to use. The following metrics are available:
+- Harmonics Radius Index
+- Mean Squared Error
+- Structural Similarity Index
+- Peak Signal to Noise Ratio
+
+The API is designed to be simple and easy to use. The following example demonstrates how to use the API to calculate the Harmonics Radius Index and other image quality metrics.
 
 ```python
 from harmonicsradius.metrics import (

@@ -16,7 +16,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 
-dependencies = ["numpy", "opencv-python", "scikit-image", "matplotlib"]
+dependencies = ["numpy", "opencv-python", "scikit-image"]
 
 
 requires-python = ">= 3.10"
@@ -33,7 +33,7 @@ build-backend = "setuptools.build_meta"
 include = ["harmonicsradius*"]
 
 [project.scripts]
-hri95 = "hri95:main"
+hri95 = "harmonicsradius.hri95:main"
 
 [project.urls]
 Homepage = "https://github.com/electricalgorithm/harmonics-radius-index"

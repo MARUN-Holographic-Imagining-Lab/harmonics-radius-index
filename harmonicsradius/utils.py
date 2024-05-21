@@ -7,7 +7,6 @@ from numpy import log as np_log
 from numpy import abs as np_abs
 from numpy import max as np_max
 from numpy import uint8 as np_uint8
-from matplotlib import pyplot as plt
 
 
 def read_image(image_path: str) -> ndarray:
@@ -64,6 +63,9 @@ def show_fft_image(fft_image: ndarray, title: str = "FFT Image") -> None:
     :param fft_image: The FFT image to be shown.
     :param title: The title of the image.
     """
+    # Importing here to avoid waiting time for matplotlib load.
+    from matplotlib import pyplot as plt
+
     fft_uint8 = (fft_image / np_max(fft_image) * 255).astype(np_uint8)
     plt.imshow(fft_uint8, cmap="gray")
     plt.title(title)
