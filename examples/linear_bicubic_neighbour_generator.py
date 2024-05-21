@@ -3,8 +3,8 @@ This script generates the linear, bicubic and nearest neighbour upscaled images
 from the low resolution images.
 """
 
-from core.image import Image
-from core.preprocessors import (
+from harmonicsradius.image import Image
+from harmonicsradius.preprocessors import (
     linear_upscale,
     bicubic_upscale,
     nearest_upscale,

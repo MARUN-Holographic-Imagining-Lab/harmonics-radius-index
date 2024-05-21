@@ -4,10 +4,10 @@ Harmonics Radius implementation with SSIM as a metric.
 import numpy
 from skimage.metrics import structural_similarity
 
-from core.image import Image
-from core.metrics.interface_metric import InterfaceMetric, MetricResult
-from core.utils import get_fft_of_image
-#  from core.utils import draw_square_from_center
+from harmonicsradius.image import Image
+from harmonicsradius.metrics.interface_metric import InterfaceMetric, MetricResult
+from harmonicsradius.utils import get_fft_of_image
+#  from harmonicsradius.utils import draw_square_from_center
 
 
 class HarmonicsRadius(InterfaceMetric):

@@ -6,7 +6,7 @@ import numpy as np
 import cv2
 from skimage.metrics import structural_similarity
 
-from core.preprocessors import shrink_to, linear_upscale, nearest_upscale
+from harmonicsradius.preprocessors import shrink_to, linear_upscale, nearest_upscale
 
 if __name__ == "__main__":
 
@@ -33,19 +33,19 @@ if __name__ == "__main__":
 
     # Calculate the SSIM.
     calculated_zero_ssim = structural_similarity(
-            image,
-            image_zeroed,
+        image,
+        image_zeroed,
     )
 
     calculated_linear_ssim = structural_similarity(
-            image,
-            image_linear,
-            data_range=image.max() - image_linear_mirror.min(),
+        image,
+        image_linear,
+        data_range=image.max() - image_linear_mirror.min(),
     )
     calculated_linear_ssim_mirror = structural_similarity(
-            image,
-            image_linear_mirror,
-            data_range=image.max() - image_linear_mirror.min(),
+        image,
+        image_linear_mirror,
+        data_range=image.max() - image_linear_mirror.min(),
     )
 
     print("SSIM of nearest image: ", calculated_zero_ssim)

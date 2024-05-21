@@ -2,13 +2,14 @@
 Holds the Image class to be used in the analisys.
 """
 from numpy import ndarray
-from core.utils import read_image, save_image
+from typing import Union
+from harmonicsradius.utils import read_image, save_image
 
 
 class Image:
     """Holds the image objects and preproceses if needed."""
 
-    def __init__(self, image_path: str or 'Image' or ndarray,
+    def __init__(self, image_path: Union[str, 'Image', ndarray],
                  name: str, preprocess: callable = None) -> None:
         """Constructor of the Image class.
 

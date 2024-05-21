@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy
 import cv2
-from core.image import Image
+from harmonicsradius.image import Image
 
 SHIFT_AMOUNT_PERC = 4
 REDUCE_SHIFT_AMOUNT_PERC = 1

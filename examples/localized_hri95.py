@@ -1,6 +1,6 @@
 """
 This script find the average HRI95
-score of the given images.
+sharmonicsradius of the given images.
 """
 
 from dataclasses import dataclass
@@ -11,7 +11,7 @@ from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error as mse
 
-from core.utils import get_fft_of_image
+from harmonicsradius.utils import get_fft_of_image
 
 
 @dataclass

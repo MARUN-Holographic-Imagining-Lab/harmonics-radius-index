@@ -23,4 +23,4 @@ jobs:
           flake8 $(git ls-files '*.py')
       - name: Reviewing the code using Pylint
         run: |
-          pylint $(git ls-files '*.py')
+          pylint $(git ls-files '*.py') --rcfile=pyproject.toml

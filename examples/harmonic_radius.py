@@ -5,8 +5,8 @@ This is the standalone version of the harmonic radius index.
 import numpy
 from skimage.metrics import structural_similarity
 
-from core.image import Image
-from core.utils import get_fft_of_image, draw_square_from_center
+from harmonicsradius.image import Image
+from harmonicsradius.utils import get_fft_of_image, draw_square_from_center
 
 
 def harmonic_radius(y_pred: Image | numpy.ndarray,
