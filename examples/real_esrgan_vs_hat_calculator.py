@@ -9,10 +9,6 @@ from core.metrics import HarmonicsRadius
 from core.settings import SRAnalyzerSettings
 from core.image import Image
 from core.sr_analyzer import SRAnalyzer
-from core.preprocessors import (
-    linear_upscale,
-    bicubic_upscale,
-)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

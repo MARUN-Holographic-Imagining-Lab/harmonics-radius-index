@@ -166,8 +166,8 @@ if __name__ == "__main__":
             location_width_end=sub_img_loc["end_width"],
             location_height_end=sub_img_loc["end_height"],
         ))
-    print(f"Sub image pairs are created. {
-          len(sub_image_pairs)} sub image pairs found.")
+    print("Sub image pairs are created. "
+          f"{len(sub_image_pairs)} sub image pairs found.")
 
     # Calculate the HRI95 for each sub image pair.
     print("Calculating HRI95, PSNR, SSIM, MSE for each sub image pair...")

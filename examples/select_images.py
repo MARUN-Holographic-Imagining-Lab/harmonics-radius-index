@@ -6,7 +6,7 @@ from core.image import Image
 
 SHIFT_AMOUNT_PERC = 4
 REDUCE_SHIFT_AMOUNT_PERC = 1
-IMAGE = "images/hr.png"
+IMAGE = "images/image_SRF_2/img_002_SRF_2_HR.png"
 NORMAL_ADD = False
 
 # Check if SHIFT_AMOUNT_PERC / REDUCE_SHIFT_AMOUNT_PERC is an odd number.

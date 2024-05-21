@@ -7,7 +7,7 @@ from skimage.metrics import structural_similarity
 from core.image import Image
 from core.metrics.interface_metric import InterfaceMetric, MetricResult
 from core.utils import get_fft_of_image
-from core.utils import draw_square_from_center
+#  from core.utils import draw_square_from_center
 
 
 class HarmonicsRadius(InterfaceMetric):
