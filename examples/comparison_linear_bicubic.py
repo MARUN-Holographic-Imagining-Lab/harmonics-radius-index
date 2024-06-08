@@ -3,17 +3,17 @@ This script compares the results of linear and bicubic interpolation
 with the high resolution image.
 """
 
-from core.metrics import (
+from harmonicsradius.metrics import (
     HarmonicsRadius,
     MeanSquaredError,
     StructuralSimilarityIndex,
     PeakSignalToNoiseRatio
 )
 
-from core.settings import SRAnalyzerSettings
-from core.image import Image
-from core.sr_analyzer import SRAnalyzer
-from core.preprocessors import (
+from harmonicsradius.settings import SRAnalyzerSettings
+from harmonicsradius.image import Image
+from harmonicsradius.sr_analyzer import SRAnalyzer
+from harmonicsradius.preprocessors import (
     linear_upscale,
     bicubic_upscale,
     nearest_upscale,

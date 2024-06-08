@@ -22,7 +22,9 @@ class MetricResult:
 
         :returns: The string representation of the metric.
         """
-        return f"{self.name}: {self.value} {self.unit} " \
+        value_to_str = f"{self.value:.3f}" if isinstance(
+            self.value, float) else self.value
+        return f"{self.name}: {value_to_str} {self.unit} " \
             f"(ref: {self.reference_image_name}, comp: {self.image_name})"
 
     def to_dict(self) -> dict[str, Any]:

@@ -2,9 +2,9 @@
 This script shows how to use the SRAnalyzer class to compare the results of
 different super resolution algorithms with high-resolution one color changed.
 """
-from core.image import Image
-from core.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
-from core.metrics import StructuralSimilarityIndex, HarmonicsRadius
+from harmonicsradius.image import Image
+from harmonicsradius.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
+from harmonicsradius.metrics import StructuralSimilarityIndex, HarmonicsRadius
 
 
 def circler_colours(image):

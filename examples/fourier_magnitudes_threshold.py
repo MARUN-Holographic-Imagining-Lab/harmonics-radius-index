@@ -4,9 +4,9 @@ and apply thresholding to the Fourier Magnitude.
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from core.image import Image
-from core.preprocessors import shrink_to, bicubic_upscale
-from core.utils import get_fft_of_image
+from harmonicsradius.image import Image
+from harmonicsradius.preprocessors import shrink_to, bicubic_upscale
+from harmonicsradius.utils import get_fft_of_image
 
 # Constants
 IMAGES: dict[str, str] = {

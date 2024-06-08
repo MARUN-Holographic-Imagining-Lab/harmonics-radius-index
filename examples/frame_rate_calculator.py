@@ -3,7 +3,7 @@ This script calculates the average frame rate of the harmonic radius function
 on 10000 iterations with 5 different images.
 """
 import time
-from core.image import Image
+from harmonicsradius.image import Image
 from scripts.harmonic_radius import harmonic_radius
 
 if __name__ == "__main__":

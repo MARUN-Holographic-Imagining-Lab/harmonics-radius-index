@@ -1,14 +1,14 @@
 """
 A script to generate HR images from LR image.
 """
-from core.image import Image
-from core.preprocessors import (
+from harmonicsradius.image import Image
+from harmonicsradius.preprocessors import (
     shrink_to,
     linear_upscale,
     bicubic_upscale,
     nearest_upscale,
 )
-from core.utils import save_image
+from harmonicsradius.utils import save_image
 
 if __name__ == "__main__":
     # Add images.

@@ -1,8 +1,8 @@
 [project]
-name = "harmonics-radius-index"
+name = "harmonicsradius"
 description = "Harmonics' Radius Index (HRI95) is a full-reference image quality index based harmonic structures of the images for the comparison super-resolution models."
 keywords = ["super-resolution", "frequency-analysis", "image-quality-metrics"]
-version = "2024.3.0"
+version = "2024.5.21"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
 
@@ -16,12 +16,24 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 
+dependencies = ["numpy", "opencv-python", "scikit-image"]
+
 
 requires-python = ">= 3.10"
 authors = [{ name = "Gökhan Koçmarlı", email = "gokhan.kocmarli@gmail.com" }]
 maintainers = [
     { name = "Gökhan Koçmarlı", email = "gokhan.kocmarli@gmail.com" },
 ]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["harmonicsradius*"]
+
+[project.scripts]
+hri95 = "harmonicsradius.hri95:main"
 
 [project.urls]
 Homepage = "https://github.com/electricalgorithm/harmonics-radius-index"
@@ -30,7 +42,7 @@ Issues = "https://github.com/electricalgorithm/harmonics-radius-index/issues"
 
 
 [tool.flake8]
-exclude = [".git", "__pycache__", "*venv", "build", "dist", "venv*"]
+exclude = [".git", "__pycache__", "*venv", "build", "dist", "venv*", "examples"]
 max-line-length = 100
 count = true
 
@@ -39,7 +51,7 @@ persistent = true
 extension-pkg-whitelist = "cv2"
 ignore = [".git", "__pycache__", "*venv", "build", "dist", "venv*"]
 fail-under = '8.5'
-ignore-patterns = ["^\\.#"]
+ignore-patterns = ["^\\.#", "^examples/.*$"]
 jobs = 5
 limit-inference-results = 100
 load-plugins = [
@@ -67,4 +79,5 @@ disable = [
     "arguments-differ",
     "import-error",
     "too-many-locals",
+    "no-member",
 ]

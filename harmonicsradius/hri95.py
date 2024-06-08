@@ -2,17 +2,9 @@
 Main application script
 """
 import argparse
-
-from core.metrics import (
-    MeanSquaredError,
-    HarmonicsRadius,
-    StructuralSimilarityIndex,
-    PeakSignalToNoiseRatio
-)
-
-from core.settings import SRAnalyzerSettings
-from core.image import Image
-from core.sr_analyzer import SRAnalyzer
+from harmonicsradius.sr_analyzer import SRAnalyzer
+from harmonicsradius.metrics import HarmonicsRadius
+from harmonicsradius.image import Image
 
 
 def argument_parser() -> dict[str, str]:
@@ -44,7 +36,8 @@ def argument_parser() -> dict[str, str]:
             "predicted": arguments.predicted_image}
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Main function of the application."""
     # Return the file paths of the images.
     images = argument_parser()
 
@@ -53,25 +46,19 @@ if __name__ == "__main__":
     predicted_image = Image(images['predicted'], name="predicted_image")
 
     # Create the analyzer.
-    analyzer = SRAnalyzer(
-        SRAnalyzerSettings(name="HRI95 Calculator")
-    )
+    analyzer = SRAnalyzer()
 
     # Add metrics.
     analyzer.add_metric(HarmonicsRadius())
-    analyzer.add_metric(MeanSquaredError())
-    analyzer.add_metric(StructuralSimilarityIndex())
-    analyzer.add_metric(PeakSignalToNoiseRatio())
 
     # Add images.
     analyzer.add_reference_image(true_image)
     analyzer.add_image(predicted_image)
 
     # Calculate the metrics.
-    results = analyzer.calculate()
-    print("\nImage Quality Metrics\n")
-    print("True Image: ", images['true'])
-    print("Predicted Image: ", images['predicted'])
-    print("")
-    for result in results:
-        print(f"- {result.name}: {result.value:.3f} {result.unit}")
+    [hri95_result] = analyzer.calculate()
+    print(f"{hri95_result.value:.2f}%")
+
+
+if __name__ == "__main__":
+    main()

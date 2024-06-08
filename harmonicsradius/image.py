@@ -2,13 +2,14 @@
 Holds the Image class to be used in the analisys.
 """
 from numpy import ndarray
-from core.utils import read_image, save_image
+from typing import Union
+from harmonicsradius.utils import read_image, save_image
 
 
 class Image:
     """Holds the image objects and preproceses if needed."""
 
-    def __init__(self, image_path: str or 'Image' or ndarray,
+    def __init__(self, image_path: Union[str, 'Image', ndarray],
                  name: str, preprocess: callable = None) -> None:
         """Constructor of the Image class.
 
@@ -25,7 +26,12 @@ class Image:
             self._original_image = image_path.get_image()
         elif isinstance(image_path, str):
             self._path = image_path
-            self._original_image = read_image(image_path)
+            try:
+                self._original_image = read_image(image_path)
+            except Exception as e:
+                raise ValueError(f"Error while reading the image: {e}.")
+            if self._original_image is None:
+                raise ValueError("Error while reading the image.")
         elif isinstance(image_path, ndarray):
             self._path = None
             self._original_image = image_path

@@ -2,9 +2,9 @@
 This script compares the results of the HAT algorithm with the linear
 interpolation algorithm when the HAT result is mirrored.
 """
-from core.image import Image
-from core.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
-from core.metrics import StructuralSimilarityIndex, HarmonicsRadius
+from harmonicsradius.image import Image
+from harmonicsradius.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
+from harmonicsradius.metrics import StructuralSimilarityIndex, HarmonicsRadius
 
 
 def mirror_image_in_xy(image):

@@ -4,9 +4,9 @@ Main application script
 import numpy as np
 import random
 
-from core.image import Image
-from core.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
-from core.metrics import StructuralSimilarityIndex, HarmonicsRadius
+from harmonicsradius.image import Image
+from harmonicsradius.sr_analyzer import SRAnalyzer, SRAnalyzerSettings
+from harmonicsradius.metrics import StructuralSimilarityIndex, HarmonicsRadius
 
 
 def randomly_blacked(image):

@@ -1,15 +1,15 @@
 """
 The main super resolution analyzer class.
 """
-from core.metrics.interface_metric import InterfaceMetric, MetricResult
-from core.image import Image
-from core.settings import SRAnalyzerSettings
+from harmonicsradius.metrics.interface_metric import InterfaceMetric, MetricResult
+from harmonicsradius.image import Image
+from harmonicsradius.settings import SRAnalyzerSettings
 
 
 class SRAnalyzer:
     """The main super resolution analyzer class."""
 
-    def __init__(self, settings: SRAnalyzerSettings):
+    def __init__(self, settings: SRAnalyzerSettings = SRAnalyzerSettings()):
         """Initialize the SRAnalyzer class.
 
         :param settings: The settings of the analyzer.

@@ -10,7 +10,7 @@ class SRAnalyzerSettings:
     Holds Analyzer settings.
     """
 
-    name: str
+    name: str = "SRAnalyzerDefault"
     """Holds the name of the Analyzer."""
     show_process: bool = True
     """Holds if the Analyzer should show the process.

@@ -4,14 +4,17 @@ Harmonics Radius implementation with SSIM as a metric.
 import numpy
 from skimage.metrics import structural_similarity
 
-from core.image import Image
-from core.metrics.interface_metric import InterfaceMetric, MetricResult
-from core.utils import get_fft_of_image
-#  from core.utils import draw_square_from_center
+from harmonicsradius.image import Image
+from harmonicsradius.metrics.interface_metric import InterfaceMetric, MetricResult
+from harmonicsradius.utils import get_fft_of_image
+#  from harmonicsradius.utils import draw_square_from_center
 
 
 class HarmonicsRadius(InterfaceMetric):
     """The HRI95 metric."""
+    THRESHOLD: float = 0.95
+    METRIC_NAME: str = f"harmonics_radius_{int(THRESHOLD*100)}"
+    METRIC_UNIT: str = "%"
 
     @property
     def keywords_needed(self) -> dict[str, type]:
@@ -58,7 +61,9 @@ class HarmonicsRadius(InterfaceMetric):
         pred_x_center = fft_of_pred.shape[0] // 2
         pred_y_center = fft_of_pred.shape[1] // 2
 
-        grid_size = fft_of_pred.shape[0] // 2
+        # Check the smallest side of the image.
+        grid_size = self.get_smallest_side_size(fft_of_pred)
+
         while True:
             # Get the grid.
             grid_pred = fft_of_pred[
@@ -78,15 +83,23 @@ class HarmonicsRadius(InterfaceMetric):
                 multichannel=False,
             )
 
-            if ssim_result > 0.95:
+            # draw_square_from_center(
+            #     fft_of_pred,
+            #     (pred_x_center,
+            #      pred_y_center),
+            #     grid_size//2,
+            # )
+            if ssim_result > self.THRESHOLD:
                 # The radius is the half of the grid size.
-                radius = grid_size // 2
+                found_radius: int = grid_size / 2
+                image_radius: int = self.get_smallest_side_size(
+                    fft_of_pred) / 2
+                metric_value = (found_radius / image_radius) * 100
 
-                # draw_square_from_center(fft_of_pred, (pred_x_center, pred_y_center), radius)
                 return MetricResult(
-                    metric_name="HRI95",
-                    metric_value=radius,
-                    metric_unit="px"
+                    metric_name=self.METRIC_NAME,
+                    metric_value=metric_value,
+                    metric_unit=self.METRIC_UNIT
                 )
 
             # Increase the grid size by 2.
@@ -98,7 +111,19 @@ class HarmonicsRadius(InterfaceMetric):
 
         # If the radius is not found, return the maximum radius.
         return MetricResult(
-            metric_name="harmonics_radius",
+            metric_name=self.METRIC_NAME,
             metric_value=0,
-            metric_unit="px"
+            metric_unit=self.METRIC_UNIT
         )
+
+    @staticmethod
+    def get_smallest_side_size(image: numpy.ndarray) -> int:
+        """Get the smallest side size of the image.
+
+        :param image: The image.
+
+        :return: The smallest side size of the image.
+        """
+        return image.shape[0] \
+            if image.shape[0] < image.shape[1] \
+            else image.shape[1]

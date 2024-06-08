@@ -1,15 +1,14 @@
 """
-PSNR implementation as a metric.
+MSE implementation as a metric.
 """
 import numpy
-from skimage.metrics import peak_signal_noise_ratio
+from skimage.metrics import structural_similarity
+from harmonicsradius.image import Image
+from harmonicsradius.metrics.interface_metric import InterfaceMetric, MetricResult
 
-from core.image import Image
-from core.metrics.interface_metric import InterfaceMetric, MetricResult
 
-
-class PeakSignalToNoiseRatio(InterfaceMetric):
-    """The PSNR metric."""
+class StructuralSimilarityIndex(InterfaceMetric):
+    """The SSIM metric."""
 
     @property
     def keywords_needed(self) -> dict[str, type]:
@@ -20,15 +19,16 @@ class PeakSignalToNoiseRatio(InterfaceMetric):
         return {"y_true": Image, "y_pred": Image}
 
     def calculate(self, **kwargs) -> MetricResult:
-        """Calculate the PSNR metric.
+        """Calculate the SSIM metric.
 
         :param kwargs: The keywords needed to calculate the metric.
         Check the keywords_needed property.
-        :return: The PSNR metric in a MetricResult object.
+        :return: The SSIM metric in a MetricResult object.
         """
         # Check keywords.
         if not set(self.keywords_needed).issubset(kwargs):
-            raise ValueError("Missing keywords needed to calculate the metric.")
+            raise ValueError(
+                "Missing keywords needed to calculate the metric.")
 
         # Get the parameters.
         y_true = kwargs["y_true"]
@@ -44,13 +44,16 @@ class PeakSignalToNoiseRatio(InterfaceMetric):
         if y_true.get_shape() != y_pred.get_shape():
             raise ValueError("y_true and y_pred must have the same shape.")
 
-        # Calculate the MSE.
+        # Calculate the SSIM.
         y_true_array: numpy.ndarray = y_true.get_image()
         y_pred_array: numpy.ndarray = y_pred.get_image()
-        calculated_psnr = peak_signal_noise_ratio(
+
+        calculated_ssim = structural_similarity(
             y_true_array,
             y_pred_array,
             data_range=y_true_array.max() - y_true_array.min(),
+            multichannel=True,
+            channel_axis=2,
         )
 
-        return MetricResult(metric_name="PSNR", metric_value=calculated_psnr, metric_unit="dB")
+        return MetricResult(metric_name="SSIM", metric_value=calculated_ssim, metric_unit="")
